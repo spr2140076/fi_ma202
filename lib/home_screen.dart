@@ -1,3 +1,4 @@
+import 'package:fi_ma/view/register/exin_detail_edit.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -9,21 +10,23 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
-  late TabController _tabController;
 
   @override
   void initState() {
     super.initState() ;
-    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Fi-MA', style: TextStyle(fontSize: 25),),
+        centerTitle: true,
+      ),
       body: Center(
         child: Column(
           children: <Widget>[
-            SizedBox(height: 35,),
+            SizedBox(height: 10,),
             Container(
               width: double.infinity,
               height: 50,
@@ -33,16 +36,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   Container(
                     width: 300,
                     height: 40,
-                    child: OutlinedButton(
-                      child: Text('一週間以内未払い請求書', style: TextStyle(fontSize: 25, color: Colors.orange),),
-                      onPressed: () {},
-                    ),
+                    child: Text('一週間以内未払い請求書', style: TextStyle(fontSize: 25, color: Colors.orange),),
                   ),
-                  SizedBox(width: 25,),
                 ],
               ),
             ),
-            SizedBox(height: 40,),
             Container(
               width: double.infinity,
               height: 250,
@@ -52,99 +50,42 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 children: <Widget>[
                   Container(
                     width: 200,
-                    height: 250,
+                    height: 200,
                     //color: Colors.cyan,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,children: [
-                      Container(
-                        width: 50,
-                        height: 25,
-                        color: Colors.cyan,
-                        child: DefaultTabController(
-                          length: 2,
-                          initialIndex: 0,
-                          child: TabBar(
-                            controller: _tabController,
-                            unselectedLabelColor: Colors.black,
-                            tabs: [
-                              Tab(text: '円グラフ',),
-                              Tab(text: '棒グラフ',),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 10,),
                       Expanded(
-                        child: TabBarView(
-                          controller: _tabController,
-                          children: <Widget>[
-                            PieChart(
-                              PieChartData(
-                                  centerSpaceRadius: 60,
-                                  startDegreeOffset: 300,  //要検討
-                                  sections: [
-                                    PieChartSectionData(
-                                      borderSide: BorderSide(color: Colors.black, width: 1),
-                                      color: Colors.red,
-                                    ),
-                                    PieChartSectionData(
-                                      borderSide: BorderSide(color: Colors.black, width: 1),
-                                      color: Colors.purple,
-                                    ),
-                                    PieChartSectionData(
-                                      borderSide: BorderSide(color: Colors.black, width: 1),
-                                      color: Colors.blueAccent,
-                                    ),
-                                    PieChartSectionData(
-                                      borderSide: BorderSide(color: Colors.black, width: 1),
-                                      color: Colors.orange,
-                                    ),
-                                    PieChartSectionData(
-                                      borderSide: BorderSide(color: Colors.black, width: 1),
-                                      color: Colors.green,
-                                    ),
-                                    PieChartSectionData(
-                                      borderSide: BorderSide(color: Colors.black, width: 1),
-                                      color: Colors.yellow,
-                                    ),
-                                  ]
-                              ),
-                            ),
-                            BarChart(
-                              BarChartData(
-                                  borderData: FlBorderData(
-                                    border: Border(
-                                      top: BorderSide.none,
-                                      right: BorderSide.none,
-                                      left: BorderSide(width: 1),
-                                      bottom: BorderSide(width: 1),
-                                    ),
-                                  ),
-                                  groupsSpace: 6,
-                                  barGroups: [
-                                    BarChartGroupData(x: 1, barRods: [
-                                      BarChartRodData(toY: 0.2, width: 10,color: Colors.red),
-                                    ]),
-                                    BarChartGroupData(x: 2, barRods: [
-                                      BarChartRodData(toY: 2, width: 10, color: Colors.purple),
-                                    ]),
-                                    BarChartGroupData(x: 3, barRods: [
-                                      BarChartRodData(toY: 4, width: 10, color: Colors.blue),
-                                    ]),
-                                    BarChartGroupData(x: 2, barRods: [
-                                      BarChartRodData(toY: 4, width: 10, color: Colors.orange),
-                                    ]),
-                                    BarChartGroupData(x: 5, barRods: [
-                                      BarChartRodData(toY: 1, width: 10, color: Colors.green),
-                                    ]),
-                                    BarChartGroupData(x: 6, barRods: [
-                                      BarChartRodData(toY: 3, width: 10, color: Colors.yellow),
-                                    ]),
-                                  ]
-                              ),
-                            ),
-
-                          ],
+                        child: PieChart(
+                          PieChartData(
+                              centerSpaceRadius: 60,
+                              startDegreeOffset: 300,  //要検討
+                              sections: [
+                                PieChartSectionData(
+                                  borderSide: BorderSide(color: Colors.black, width: 1),
+                                  color: Colors.red,
+                                ),
+                                PieChartSectionData(
+                                  borderSide: BorderSide(color: Colors.black, width: 1),
+                                  color: Colors.purple,
+                                ),
+                                PieChartSectionData(
+                                  borderSide: BorderSide(color: Colors.black, width: 1),
+                                  color: Colors.blueAccent,
+                                ),
+                                PieChartSectionData(
+                                  borderSide: BorderSide(color: Colors.black, width: 1),
+                                  color: Colors.orange,
+                                ),
+                                PieChartSectionData(
+                                  borderSide: BorderSide(color: Colors.black, width: 1),
+                                  color: Colors.green,
+                                ),
+                                PieChartSectionData(
+                                  borderSide: BorderSide(color: Colors.black, width: 1),
+                                  color: Colors.yellow,
+                                ),
+                              ]
+                          ),
                         ),
                       ),
                     ],
@@ -157,14 +98,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       children: <Widget>[
                         Text('今月の予算', style: TextStyle(fontSize: 30),),
                         SizedBox(height: 30,),
-                        Text('100,000', style: TextStyle(fontSize: 30, decoration: TextDecoration.underline),),
+                        Text('￥100,000', style: TextStyle(fontSize: 30, decoration: TextDecoration.underline),),
                       ],
                     ),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 20,),
+            SizedBox(height: 10,),
             Container(
               child: Row(
                 children: [
@@ -177,15 +118,28 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             SizedBox(height: 10,),
             Container(
               width: double.infinity,
-              height: 250,
-              color: Colors.yellowAccent,
+              height: 150,
+              // color: Colors.yellowAccent,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text('食費', style: TextStyle(fontSize: 25),),
+                  SizedBox(width: 15,),
+                  Text('￥2,000', style: TextStyle(fontSize: 25),)
+                ],
+              ),
             ),
-
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () async {                                       // ＋ボタンを押したときの処理を設定
+          await Navigator.of(context).push(                         // ページ遷移をNavigatorで設定
+            MaterialPageRoute(
+                builder: (context) => const ExpenseDetailEdit()           // 詳細更新画面（元ネタがないから新規登録）を表示するcat_detail_edit.dartへ遷移
+            ),
+          );
+        },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),

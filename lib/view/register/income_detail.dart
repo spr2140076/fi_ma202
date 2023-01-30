@@ -18,7 +18,7 @@ class IncomeDetail extends StatefulWidget {
 class _IncomeDetailState extends State<IncomeDetail> {
   late Incomes incomes;
   bool isLoading = false;
-  static const int textExpandedFlex = 1; // 見出しのexpaded flexの比率
+  static const int textExpandedFlex = 2; // 見出しのexpaded flexの比率
   static const int dataExpandedFlex = 4; // 項目のexpanede flexの比率
 
 
@@ -42,7 +42,7 @@ class _IncomeDetailState extends State<IncomeDetail> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('支出詳細'),
+          title: const Text('収入詳細'),
           actions: [
             IconButton(
               onPressed: () async {                          // 鉛筆のアイコンが押されたときの処理を設定
@@ -80,28 +80,32 @@ class _IncomeDetailState extends State<IncomeDetail> {
                     flex: textExpandedFlex,
                     child: Text('日付',
                       textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 20),
                     ),
                   ),
                   Expanded(
                     flex: dataExpandedFlex,
                     child: Container(                           // catsテーブルのnameの表示を設定
                       padding: const EdgeInsets.all(5.0),
-                      child: Text(DateFormat("yyyy年MM月dd日").format(incomes.income_day)),
+                      child: Text(DateFormat("yyyy年MM月dd日").format(incomes.income_day),
+                        style: const TextStyle(fontSize: 20),),
                     ),
                   ),
                 ],),
                 Row(children: [
                   const Expanded(     // 「メモ」の見出し行の設定
                       flex: textExpandedFlex,
-                      child: Text('税込み金額',
+                      child: Text('税込金額',
                         textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 20),
                       )
                   ),
                   Expanded(
                     flex: dataExpandedFlex,
                     child: Container(                                      // catsテーブルのmemoの表示を設定
                       padding: const EdgeInsets.all(5.0),
-                      child: Text(incomes.income_money.toString()),
+                      child: Text(incomes.income_money.toString() + '円',
+                        style: const TextStyle(fontSize: 20),),
                     ),
                   ),
                 ],),
@@ -110,13 +114,15 @@ class _IncomeDetailState extends State<IncomeDetail> {
                     flex: textExpandedFlex,
                     child: Text('カテゴリー',
                       textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 20),
                     ),
                   ),
                   Expanded(
                     flex: dataExpandedFlex,
                     child: Container(                                      // catsテーブルのbirthdayの表示を設定
                       padding: const EdgeInsets.all(5.0),
-                      child: Text(incomes.income_category_code),
+                      child: Text(incomes.income_category_code,
+                        style: const TextStyle(fontSize: 20),),
                     ),
                   )
                 ],),
@@ -125,13 +131,15 @@ class _IncomeDetailState extends State<IncomeDetail> {
                       flex: textExpandedFlex,
                       child: Text('メモ',
                         textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 20),
                       )
                   ),
                   Expanded(
                     flex: dataExpandedFlex,
                     child: Container(                                      // catsテーブルのmemoの表示を設定
                       padding: const EdgeInsets.all(5.0),
-                      child: Text(incomes.income_memo),
+                      child: Text(incomes.income_memo,
+                        style: const TextStyle(fontSize: 20),),
                     ),
                   ),
                 ],),

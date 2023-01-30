@@ -2,6 +2,9 @@ import 'package:fi_ma/home_screen.dart';
 import 'package:fi_ma/view/deferred_payment/deferred_payment_list.dart';
 import 'package:fi_ma/view/register/exin_list.dart';
 import 'package:flutter/material.dart';
+import 'package:fi_ma/view/menu.dart';
+import 'package:fi_ma/view/budget/budget_sample.dart';
+
 
 class Footer extends StatefulWidget {
   const Footer({Key? key}) : super(key: key);
@@ -15,6 +18,8 @@ class _Footer extends State<Footer> {
     HomeScreen(),
     ExpenseList(),
     DeferredPaymentList(),
+    BudgetSample(),
+    Menu(),
   ];
 
   int _selectedIndex = 0;
@@ -33,10 +38,13 @@ class _Footer extends State<Footer> {
           onTap: _onItemTapped,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'ホーム'),
-            BottomNavigationBarItem(icon: Icon(Icons.calendar_month), label: 'カレンダー'),
+            BottomNavigationBarItem(icon: Icon(Icons.account_balance_wallet_outlined), label: '収支'),
             BottomNavigationBarItem(icon: Icon(Icons.attach_money), label: '後払い'),
+            BottomNavigationBarItem(icon: Icon(Icons.calculate), label: '予算'),
+            BottomNavigationBarItem(icon: Icon(Icons.menu), label: 'メニュー'),
           ],
           type: BottomNavigationBarType.fixed,
-        ));
+        )
+    );
   }
 }

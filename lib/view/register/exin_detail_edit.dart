@@ -1,3 +1,4 @@
+import 'package:fi_ma/view/register/exin_list.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -158,7 +159,7 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with SingleTicker
     } else {
       await createExpense();                        // insertの処理
     }
-    Navigator.of(context).pop();                // 前の画面に戻る
+    Navigator.of(context).pop();               // 前の画面に戻る
   }
 
   void createOrUpdateIncome() async {
@@ -528,7 +529,8 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with SingleTicker
                       ],
                     ),
                   ),
-                ],),
+                ],
+              ),
             ),
           ],
         ),

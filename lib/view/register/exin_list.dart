@@ -21,7 +21,8 @@ class ExpenseList extends StatefulWidget {
 class _ExpenseListPageState extends State<ExpenseList> {
   List<Expenses> expenseList = [];  //catsテーブルの全件を保有する
   List<Incomes> incomeList = [];
-  bool isLoading = false;   //テーブル読み込み中の状態を保有する
+  bool isLoading = false;
+  dynamic calendarDateTime;//テーブル読み込み中の状態を保有する
 
 // Stateのサブクラスを作成し、initStateをオーバーライドすると、wedgit作成時に処理を動かすことができる。
 // ここでは、初期処理としてCatsの全データを取得する。
@@ -30,6 +31,7 @@ class _ExpenseListPageState extends State<ExpenseList> {
     super.initState();
     getExpensesList();
     getIncomesList();
+    calendarDateTime = DateTime.now();
   }
 
 // initStateで動かす処理。
@@ -46,11 +48,28 @@ class _ExpenseListPageState extends State<ExpenseList> {
     setState(() => isLoading = false);
   }
 
+  _calendarDatePicker(BuildContext context)  {
+    showDatePicker(
+      locale: const Locale("ja"),
+      context: context,
+      initialDate: calendarDateTime,
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2030));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text('収支一覧')
+        actions: [
+          IconButton(
+            onPressed: () {
+              _calendarDatePicker(context);
+            },
+            icon: const Icon(Icons.calendar_month))
+        ],
+        title: const Text('収支一覧', style: TextStyle(fontSize: 25),),
+        centerTitle: true,
       ),
       resizeToAvoidBottomInset: false,
       body: Container(
@@ -73,14 +92,10 @@ class _ExpenseListPageState extends State<ExpenseList> {
                       ],
                     ),
                   ),
-                  // isLoading                               //「読み込み中」だったら「グルグル」が表示される
-                  //     ? const Center(
-                  //   child: CircularProgressIndicator(),   // これが「グルグル」の処理
-                  // ):
                   const SizedBox(height: 20,),
 
                   Container(
-                    height: 480,
+                    height: 450,
                     child: TabBarView(
                       children: <Widget>[
 
@@ -151,7 +166,8 @@ class _ExpenseListPageState extends State<ExpenseList> {
                       ],
                     ),
                   ),
-                ],),
+                ],
+              ),
             ),
           ],
         ),

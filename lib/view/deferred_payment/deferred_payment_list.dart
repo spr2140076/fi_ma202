@@ -39,7 +39,9 @@ class _DeferredPaymentListPageState extends State<DeferredPaymentList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text('後払い一覧')),
+          title: const Text('後払い一覧', style: TextStyle(fontSize: 25),),
+          centerTitle: true,
+      ),
       body: isLoading                               //「読み込み中」だったら「グルグル」が表示される
           ? const Center(
         child: CircularProgressIndicator(),   // これが「グルグル」の処理

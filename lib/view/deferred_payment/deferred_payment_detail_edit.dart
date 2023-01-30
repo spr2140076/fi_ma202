@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import '../../model/deferred_payment/deferred_payment_db_helper.dart';
 import '../../model/deferred_payment/deferred_payments.dart';
-
+import 'package:flutter_app_badger/flutter_app_badger.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 
 class DeferredPaymentDetailEdit extends StatefulWidget {
@@ -13,7 +17,7 @@ class DeferredPaymentDetailEdit extends StatefulWidget {
   _DeferredPaymentDetailEditState createState() => _DeferredPaymentDetailEditState();
 }
 
-class _DeferredPaymentDetailEditState extends State<DeferredPaymentDetailEdit> {
+class _DeferredPaymentDetailEditState extends State<DeferredPaymentDetailEdit> with WidgetsBindingObserver{
   late int deferred_payment_id;
   late String deferred_payment_category_code;
   late String deferred_payment_genre_code;
@@ -36,29 +40,61 @@ class _DeferredPaymentDetailEditState extends State<DeferredPaymentDetailEdit> {
   }
   dynamic deferred_paymentDateTime;
   dynamic deferred_paymentDateFormat;
+
+  dynamic dateTime;
+  // dynamic dateFormat;
+  dynamic dateYear;
+  dynamic dateMonth;
+  dynamic dateDay;
+  // final List<int> _notification = <int>[1,3,5,7];
+  // late int _selected;
+  // int notificationValue = 1;
+  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
 // Stateのサブクラスを作成し、initStateをオーバーライドすると、wedgit作成時に処理を動かすことができる。
 // ここでは、各項目の初期値を設定する
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _init();
     // print(widget.deferred_payments);
     // deferred_payment
     deferred_payment_id = widget.deferred_payments?.deferred_payment_id ?? 0;
-    deferred_payment_category_code = widget.deferred_payments?.deferred_payment_category_code ?? '';
-    deferred_payment_genre_code = widget.deferred_payments?.deferred_payment_genre_code ?? '通常';
+    deferred_payment_category_code =
+        widget.deferred_payments?.deferred_payment_category_code ?? '';
+    deferred_payment_genre_code =
+        widget.deferred_payments?.deferred_payment_genre_code ?? '通常';
     payment_method_id = widget.deferred_payments?.payment_method_id ?? '';
-    deferred_payment_name = widget.deferred_payments?.deferred_payment_name ?? '';
-    deferred_payment_total_money = widget.deferred_payments?.deferred_payment_total_money ?? 0;
-    deferred_payment_consumption_tax = widget.deferred_payments?.deferred_payment_consumption_tax ?? 0;
-    deferred_payment_amount_including_tax = widget.deferred_payments?.deferred_payment_amount_including_tax ?? 0;
-    deferred_payment_datetime = widget.deferred_payments?.deferred_payment_datetime ?? DateTime.now();
-    deferred_payment_memo = widget.deferred_payments?.deferred_payment_memo ?? '';
-    deferred_payment_created_at = widget.deferred_payments?.deferred_payment_created_at ?? DateTime.now();
-    deferred_payment_updated_at = widget.deferred_payments?.deferred_payment_updated_at ?? DateTime.now();
-    _deferred_payment_category_selected = widget.deferred_payments?.deferred_payment_category_code ?? '支出カテゴリの選択';
-    _payment_selected = widget.deferred_payments?.payment_method_id ?? '支払い方法を選択';
+    deferred_payment_name =
+        widget.deferred_payments?.deferred_payment_name ?? '';
+    deferred_payment_total_money =
+        widget.deferred_payments?.deferred_payment_total_money ?? 0;
+    deferred_payment_consumption_tax =
+        widget.deferred_payments?.deferred_payment_consumption_tax ?? 0;
+    deferred_payment_amount_including_tax =
+        widget.deferred_payments?.deferred_payment_amount_including_tax ?? 0;
+    deferred_payment_datetime =
+        widget.deferred_payments?.deferred_payment_datetime ?? DateTime.now();
+    deferred_payment_memo =
+        widget.deferred_payments?.deferred_payment_memo ?? '';
+    deferred_payment_created_at =
+        widget.deferred_payments?.deferred_payment_created_at ?? DateTime.now();
+    deferred_payment_updated_at =
+        widget.deferred_payments?.deferred_payment_updated_at ?? DateTime.now();
+    _deferred_payment_category_selected =
+        widget.deferred_payments?.deferred_payment_category_code ?? '支出カテゴリの選択';
+    _payment_selected =
+        widget.deferred_payments?.payment_method_id ?? '支払い方法を選択';
     deferred_paymentDateTime = DateTime.now();
-    deferred_paymentDateFormat = DateFormat("yyyy年MM月dd日").format(deferred_paymentDateTime);
+    deferred_paymentDateFormat =
+        DateFormat("yyyy年MM月dd日").format(deferred_paymentDateTime);
+    dateTime = DateTime.now();
+    // dateFormat = DateFormat("yyyy年MM月dd日");
+    dateYear = DateTime.now();
+    dateMonth = DateTime.now();
+    dateDay = DateTime.now();
+    // _selected = _notification.first;
   }
 
   void _onChangedDeferredPaymentCategory(String? value) {
@@ -75,12 +111,12 @@ class _DeferredPaymentDetailEditState extends State<DeferredPaymentDetailEdit> {
     });
   }
 
-  void _onChangedGenre(String? value) {
-    setState(() {
-      which = value!;
-      deferred_payment_genre_code = which;
-    });
-  }
+  // void _onChangedGenre(String? value) {
+  //   setState(() {
+  //     which = value!;
+  //     deferred_payment_genre_code = which;
+  //   });
+  // }
 
   _deferred_paymentDatePicker(BuildContext context) async {
     final DateTime? datePicked = await showDatePicker(
@@ -95,23 +131,54 @@ class _DeferredPaymentDetailEditState extends State<DeferredPaymentDetailEdit> {
         deferred_paymentDateFormat = DateFormat("yyyy年MM月dd日").format(datePicked);
         deferred_paymentDateTime = datePicked;
         deferred_payment_datetime = deferred_paymentDateTime;
+        dateYear = dateTime.year;
+        dateMonth = dateTime.month;
+        dateDay = dateTime.day;
       });
     }
   }
 
   void createOrUpdateDeferredPayment() async {
     final isUpdate = (widget.deferred_payments != null);
-
     // print(deferred_payment_name);
-    print(widget.deferred_payments);// 画面が空でなかったら
-
+    print(widget.deferred_payments);
+    // 画面が空でなかったら
     if (isUpdate) {
       await updateDeferredPayment();                        // updateの処理
     } else {
-      await createDeferredPayment();                        // insertの処理
-    }
-    Navigator.of(context).pop();                // 前の画面に戻る
+      await createDeferredPayment();
+      Navigator.of(context).pop();
+      await _cancelNotification();
+      await _requestPermissions();
+      final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+      await _registerMessage(
+          year: dateYear,
+          month: dateMonth,
+          day: dateDay - 3,
+          hour: now.hour,
+          minute: now.minute + 1,
+          message: '支払期限が近づいています',
+      );// insertの処理
+    } // 前の画面に戻る
   }
+
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      FlutterAppBadger.removeBadge();
+    }
+  }
+
+  // void _onChange(int? value) {
+  //   setState(() {
+  //     _selected = value!;
+  //     notificationValue = _selected;
+  //   });
+  // }
 
   // 更新処理の呼び出し
   Future updateDeferredPayment() async {
@@ -145,6 +212,95 @@ class _DeferredPaymentDetailEditState extends State<DeferredPaymentDetailEdit> {
       deferred_payment_updated_at: deferred_payment_updated_at,
     );
     await DeferredPaymentDbHelper.deferred_paymentinstance.deferred_paymentinsert(deferred_payment);        // catの内容で追加する
+  }
+
+  Future<void> _init() async {
+    await _configureLocalTimeZone();
+    await _initializeNotification();
+  }
+
+
+  Future<void> _configureLocalTimeZone() async {
+    tz.initializeTimeZones();
+    final String? timeZoneName = await FlutterNativeTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(timeZoneName!));
+  }
+
+  Future<void> _initializeNotification() async {
+    const DarwinInitializationSettings initializationSettingsIOS =
+    DarwinInitializationSettings(
+      requestAlertPermission: false,
+      requestBadgePermission: false,
+      requestSoundPermission: false,
+    );
+    const AndroidInitializationSettings initializationSettingsAndroid =
+    AndroidInitializationSettings('ic_notification');
+
+    const InitializationSettings initializationSettings =
+    InitializationSettings(
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsIOS,
+    );
+    await _flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  Future<void> _cancelNotification() async {
+    await _flutterLocalNotificationsPlugin.cancelAll();
+  }
+
+  Future<void> _requestPermissions() async {
+    await _flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+        IOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+  }
+
+  Future<void> _registerMessage({
+    required int year,
+    required int month,
+    required int day,
+    required int hour,
+    required int minute,
+    required message,
+  }) async {
+    //final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+    tz.TZDateTime scheduledDate = tz.TZDateTime(
+      tz.local,
+      year,
+      month,
+      day,
+      hour,
+      minute,
+    );
+
+    await _flutterLocalNotificationsPlugin.zonedSchedule(
+      0,
+      'Fi-MA',
+      message,
+      scheduledDate,
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          'channel id',
+          'channel name',
+          importance: Importance.max,
+          priority: Priority.high,
+          ongoing: true,
+          styleInformation: BigTextStyleInformation(message),
+          icon: 'ic_notification',
+        ),
+        iOS: const DarwinNotificationDetails(
+          badgeNumber: 1,
+        ),
+      ),
+      androidAllowWhileIdle: true,
+      uiLocalNotificationDateInterpretation:
+      UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
   }
 
 // 詳細編集画面を表示する
@@ -336,6 +492,7 @@ class _DeferredPaymentDetailEditState extends State<DeferredPaymentDetailEdit> {
                               ),
                             ),
                             const SizedBox(height: 20,),
+
                             Container(
                               height: 50,
                               width: 100,
@@ -344,6 +501,7 @@ class _DeferredPaymentDetailEditState extends State<DeferredPaymentDetailEdit> {
                                 onPressed: createOrUpdateDeferredPayment,
                               ),
                             ),
+
                           ],
                         ),
                       ),
