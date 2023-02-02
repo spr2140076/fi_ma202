@@ -16,7 +16,9 @@ class LoginScreen extends ConsumerWidget {
 
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(title: const Text('FlutterZero')),
+        appBar: AppBar(
+            title: const Text('FlutterZero'),
+        ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

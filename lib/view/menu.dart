@@ -1,18 +1,24 @@
+import 'package:fi_ma/login.dart';
 import 'package:fi_ma/view/notification.dart';
 import 'package:fi_ma/view/register/exin_detail_edit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Menu extends StatefulWidget {
+import '../main.dart';
+
+class Menu extends ConsumerWidget {
   const Menu({super.key, });
-
+//
+//   @override
+//   State<Menu> createState() => _Menu();
+// }
+//
+// class _Menu extends State<Menu> {
   @override
-  State<Menu> createState() => _Menu();
-}
+  Widget build(BuildContext context,WidgetRef ref) {
+    final googleProvider = ref.watch(googlSignInProvider);
 
-class _Menu extends State<Menu> {
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('メニュー', style: TextStyle(fontSize: 25),),
@@ -75,8 +81,13 @@ class _Menu extends State<Menu> {
                           CupertinoDialogAction(
                             isDestructiveAction: true,
                             child: Text('ログアウト'),
-                            onPressed: (){
-                              Navigator.pop(context);
+                            onPressed: () async {
+                              googleProvider.logout();
+                              await Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (context) => const LoginScreen()           // 詳細更新画面（元ネタがないから新規登録）を表示するcat_detail_edit.dartへ遷移
+                                ),
+                              );
                             },
                           ),
                         ],
