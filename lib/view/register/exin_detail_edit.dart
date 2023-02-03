@@ -1,7 +1,11 @@
 import 'package:fi_ma/view/register/exin_list.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_app_badger/flutter_app_badger.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 import '../../model/register/expense_db_helper.dart';
 import '../../model/register/expenses.dart';
 import '../../model/register/income_db_helper.dart';
@@ -10,7 +14,6 @@ import '../../model/register/incomes.dart';
 class ExpenseDetailEdit extends StatefulWidget {
   final Expenses? expenses;
   final Incomes? incomes;
-  // final int tabPage;
 
   const ExpenseDetailEdit({Key? key, this.expenses, this.incomes,}) : super(key: key);
 
@@ -18,15 +21,14 @@ class ExpenseDetailEdit extends StatefulWidget {
   _ExpenseDetailEditState createState() => _ExpenseDetailEditState();
 }
 
-class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with SingleTickerProviderStateMixin{
-  // late TabController _tabController;
+class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with WidgetsBindingObserver{
 
   //expense
   late int expense_id;
   late String expense_category_code;
   late String expense_genre_code;
   late String payment_method_id;
-  // late String expense_name;
+  late String expense_name;
   late int expense_total_money;
   late int expense_consumption_tax;
   late int expense_amount_including_tax;
@@ -55,17 +57,29 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with SingleTicker
   dynamic incomeDateTime;
   dynamic incomeDateFormat;
   String? incomeItem = '収入カテゴリの選択';
+
+  bool get isShow {
+    return which == '後払い';
+  }
+  dynamic dateTime;
+  dynamic dateYear;
+  dynamic dateMonth;
+  dynamic dateDay;
 // Stateのサブクラスを作成し、initStateをオーバーライドすると、wedgit作成時に処理を動かすことができる。
 // ここでは、各項目の初期値を設定する
+  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _init();
     // expense
     expense_id = widget.expenses?.expense_id ?? 0;
     expense_category_code = widget.expenses?.expense_category_code ?? '';
     expense_genre_code = widget.expenses?.expense_genre_code ?? '';
     payment_method_id = widget.expenses?.payment_method_id ?? '';
-    // expense_name = widget.expenses?.expense_name ?? '';
+    expense_name = widget.expenses?.expense_name ?? '';
     expense_total_money = widget.expenses?.expense_total_money ?? 0;
     expense_consumption_tax = widget.expenses?.expense_consumption_tax ?? 0;
     expense_amount_including_tax = widget.expenses?.expense_amount_including_tax ?? 0;
@@ -90,7 +104,10 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with SingleTicker
 
     incomeDateTime = DateTime.now();
     incomeDateFormat = DateFormat("yyyy年MM月dd日").format(incomeDateTime);
-
+    dateTime = DateTime.now();
+    dateYear = DateTime.now();
+    dateMonth = DateTime.now();
+    dateDay = DateTime.now();
   }
 
   void _onChangedExpenseCategory(String? value) {
@@ -133,6 +150,9 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with SingleTicker
         expenseDateFormat = DateFormat("yyyy年MM月dd日").format(datePicked);
         expenseDateTime = datePicked;
         expense_datetime = expenseDateTime;
+        dateYear = dateTime.year;
+        dateMonth = dateTime.month;
+        dateDay = dateTime.day;
       });
     }
   }
@@ -159,7 +179,20 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with SingleTicker
     if (isUpdate) {
       await updateExpense();                        // updateの処理
     } else {
-      await createExpense();                        // insertの処理
+      await createExpense();
+      if(which == '後払い'){
+        await _cancelNotification();
+        await _requestPermissions();
+        final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+        await _registerMessage(
+          year: dateYear,
+          month: dateMonth,
+          day: dateDay - 3,
+          hour: now.hour,
+          minute: now.minute + 1,
+          message: '支払期限が近づいています',
+        );
+      }// insertの処理
     }
     Navigator.of(context).pop();               // 前の画面に戻る
   }
@@ -181,7 +214,7 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with SingleTicker
       expense_category_code: expense_category_code,
       expense_genre_code: expense_genre_code,
       payment_method_id: payment_method_id,
-      // expense_name: expense_name,
+      expense_name: expense_name,
       expense_amount_including_tax: expense_amount_including_tax,
       expense_datetime: expense_datetime,
       expense_memo: expense_memo,
@@ -210,7 +243,7 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with SingleTicker
       expense_category_code: expense_category_code,
       expense_genre_code: expense_genre_code,
       payment_method_id: payment_method_id,
-      // expense_name: expense_name,
+      expense_name: expense_name,
       expense_total_money: 0,
       expense_consumption_tax: 0,
       expense_amount_including_tax: expense_amount_including_tax,
@@ -233,6 +266,106 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with SingleTicker
       income_updated_at: income_updated_at,
     );
     await IncomeDbHelper.incomeinstance.incomeinsert(income);        // catの内容で追加する
+  }
+
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      FlutterAppBadger.removeBadge();
+    }
+  }
+
+  Future<void> _init() async {
+    await _configureLocalTimeZone();
+    await _initializeNotification();
+  }
+
+
+  Future<void> _configureLocalTimeZone() async {
+    tz.initializeTimeZones();
+    final String? timeZoneName = await FlutterNativeTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(timeZoneName!));
+  }
+
+  Future<void> _initializeNotification() async {
+    const DarwinInitializationSettings initializationSettingsIOS =
+    DarwinInitializationSettings(
+      requestAlertPermission: false,
+      requestBadgePermission: false,
+      requestSoundPermission: false,
+    );
+    const AndroidInitializationSettings initializationSettingsAndroid =
+    AndroidInitializationSettings('ic_notification');
+
+    const InitializationSettings initializationSettings =
+    InitializationSettings(
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsIOS,
+    );
+    await _flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  Future<void> _cancelNotification() async {
+    await _flutterLocalNotificationsPlugin.cancelAll();
+  }
+
+  Future<void> _requestPermissions() async {
+    await _flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+        IOSFlutterLocalNotificationsPlugin>()
+        ?.requestPermissions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+  }
+
+  Future<void> _registerMessage({
+    required int year,
+    required int month,
+    required int day,
+    required int hour,
+    required int minute,
+    required message,
+  }) async {
+    //final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+    tz.TZDateTime scheduledDate = tz.TZDateTime(
+      tz.local,
+      year,
+      month,
+      day,
+      hour,
+      minute,
+    );
+
+    await _flutterLocalNotificationsPlugin.zonedSchedule(
+      0,
+      'Fi-MA',
+      message,
+      scheduledDate,
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          'channel id',
+          'channel name',
+          importance: Importance.max,
+          priority: Priority.high,
+          ongoing: true,
+          styleInformation: BigTextStyleInformation(message),
+          icon: 'ic_notification',
+        ),
+        iOS: const DarwinNotificationDetails(
+          badgeNumber: 1,
+        ),
+      ),
+      androidAllowWhileIdle: true,
+      uiLocalNotificationDateInterpretation:
+      UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
   }
 
 // 詳細編集画面を表示する
@@ -295,35 +428,36 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with SingleTicker
                                   ],
                                 ),
                               ),
-                              Container(
-                                width: 350,
-                                decoration: BoxDecoration(
-                                    border: Border(
-                                      bottom: BorderSide(),
-                                    )),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Container(
-                                      margin: EdgeInsets.all(15),
-                                      child:  const Text(
-                                        '支払名',
-                                        style: TextStyle(fontSize: 15),
+                              Visibility(
+                                visible: isShow,
+                                child: Container(
+                                  width: 300,
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(),
+                                      )),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Container(
+                                        margin: EdgeInsets.all(15),
+                                        child:  const Text(
+                                          '品目',
+                                          style: TextStyle(fontSize: 15),
+                                        ),
                                       ),
-                                    ),
-                                    // SizedBox(
-                                    //   width: 230,
-                                    //   height: 30,
-                                    //   child: TextFormField(
-                                    //     initialValue: expense_name,
-                                    //     decoration: InputDecoration(
-                                    //       contentPadding: EdgeInsets.all(0),
-                                    //       border: OutlineInputBorder(),
-                                    //     ),
-                                    //     onChanged: (deferred_payment_change_name) => setState(() => this.expense_name = deferred_payment_change_name),
-                                    //   ),
-                                    // ),
-                                  ],
+                                      SizedBox(
+                                        width: 230,
+                                        height: 40,
+                                        child: TextField(
+                                          decoration: InputDecoration(
+                                            contentPadding: EdgeInsets.all(0),
+                                            border: OutlineInputBorder(),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                               Container(

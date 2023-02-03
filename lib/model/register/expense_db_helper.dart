@@ -6,7 +6,7 @@ const String columnExpenseId = '_expense_id';
 const String columnExpenseCategoryCode = 'expense_category_code';
 const String columnExpenseGenreCode = 'expense_genre_code';
 const String columnPaymentMethodId = 'payment_method_id';
-// const String columnExpenseName = 'expenses_name';
+const String columnExpenseName = 'expense_name';
 const String columnExpenseTotalMoney = 'expense_total_money';
 const String columnExpenseConsumptionTax = 'expense_consumption_tax';
 const String columnExpenseAmountIncludingTax = 'expense_amount_including_tax';
@@ -21,7 +21,7 @@ const List<String> expensecolumns = [
   columnExpenseCategoryCode,
   columnExpenseGenreCode,
   columnPaymentMethodId,
-  // columnExpenseName,
+  columnExpenseName,
   columnExpenseTotalMoney,
   columnExpenseConsumptionTax,
   columnExpenseAmountIncludingTax,

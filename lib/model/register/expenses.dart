@@ -8,7 +8,7 @@ class Expenses {
   String expense_category_code;
   String expense_genre_code;
   String payment_method_id;
-  // String expense_name;
+  String expense_name;
   int expense_total_money;
   int expense_consumption_tax;
   int expense_amount_including_tax;
@@ -22,7 +22,7 @@ class Expenses {
     required this.expense_category_code,
     required this.expense_genre_code,
     required this.payment_method_id,
-    // required this.expense_name,
+    required this.expense_name,
     required this.expense_total_money,
     required this.expense_consumption_tax,
     required this.expense_amount_including_tax,
@@ -38,7 +38,7 @@ class Expenses {
     String? expense_category_code,
     String? expense_genre_code,
     String? payment_method_id,
-    // String? expense_name,
+    String? expense_name,
     int? expnse_total_money,
     int? expense_consumption_tax,
     int? expense_amount_including_tax,
@@ -52,7 +52,7 @@ class Expenses {
         expense_category_code: expense_category_code ?? this.expense_category_code,
         expense_genre_code: expense_genre_code ?? this.expense_genre_code,
         payment_method_id: payment_method_id ?? this.payment_method_id,
-        // expense_name: expense_name ?? this.expense_name,
+        expense_name: expense_name ?? this.expense_name,
         expense_total_money: expense_total_money ?? this.expense_total_money,
         expense_consumption_tax: expense_consumption_tax ?? this.expense_consumption_tax,
         expense_amount_including_tax: expense_amount_including_tax ?? this.expense_amount_including_tax,
@@ -67,7 +67,7 @@ class Expenses {
     expense_category_code: json[columnExpenseCategoryCode] as String,
     expense_genre_code: json[columnExpenseGenreCode] as String,
     payment_method_id: json[columnPaymentMethodId] as String,
-    // expense_name: json[columnExpenseName] as String,
+    expense_name: json[columnExpenseName].toString(),
     expense_total_money: json[columnExpenseTotalMoney] as int,
     expense_consumption_tax: json[columnExpenseConsumptionTax] as int,
     expense_amount_including_tax: json[columnExpenseAmountIncludingTax] as int,
@@ -81,7 +81,7 @@ class Expenses {
     columnExpenseCategoryCode: expense_category_code,
     columnExpenseGenreCode: expense_genre_code,
     columnPaymentMethodId: payment_method_id,
-    // columnExpenseName: expense_name,
+    columnExpenseName: expense_name,
     columnExpenseTotalMoney: expense_total_money,
     columnExpenseConsumptionTax: expense_consumption_tax,
     columnExpenseAmountIncludingTax: expense_amount_including_tax,

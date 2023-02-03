@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../register/exin_detail_edit.dart';
+
 // void main() {
 //   runApp(const MyApp());
 // }
@@ -199,11 +201,17 @@ class _Budget extends State<Budget> {
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {},
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.add),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {                                       // ＋ボタンを押したときの処理を設定
+          await Navigator.of(context).push(                         // ページ遷移をNavigatorで設定
+            MaterialPageRoute(
+                builder: (context) => const ExpenseDetailEdit()           // 詳細更新画面（元ネタがないから新規登録）を表示するcat_detail_edit.dartへ遷移
+            ),
+          );
+        },
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
