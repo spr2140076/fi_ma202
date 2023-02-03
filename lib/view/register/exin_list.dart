@@ -1,5 +1,6 @@
 import 'package:fi_ma/footer.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../model/register/expense_db_helper.dart';
 import '../../model/register/expenses.dart';
@@ -110,9 +111,10 @@ class _ExpenseListPageState extends State<ExpenseList> {
                                     child: Padding(               // cardのpadding設定
                                       padding: const EdgeInsets.all(15.0),
                                       child: Row(                 // cardの中身をRowで設定
-                                          children: <Widget>[               // Rowの中身を設定
-                                            Text('￥',style: const TextStyle(fontSize: 30),),
-                                            Text(expense.expense_amount_including_tax.toString() ,style: const TextStyle(fontSize: 30),),     // catのnameを表示
+                                          children: <Widget>[
+                                            Text(DateFormat("MM月dd日 ").format(expense.expense_datetime),style: const TextStyle(fontSize: 20)),// Rowの中身を設定
+                                            Text('￥',style: const TextStyle(fontSize: 20),),
+                                            Text(expense.expense_amount_including_tax.toString() ,style: const TextStyle(fontSize: 25),),     // catのnameを表示
                                           ]
                                       ),
                                     ),

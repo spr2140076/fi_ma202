@@ -6,6 +6,7 @@ const String columnExpenseId = '_expense_id';
 const String columnExpenseCategoryCode = 'expense_category_code';
 const String columnExpenseGenreCode = 'expense_genre_code';
 const String columnPaymentMethodId = 'payment_method_id';
+// const String columnExpenseName = 'expenses_name';
 const String columnExpenseTotalMoney = 'expense_total_money';
 const String columnExpenseConsumptionTax = 'expense_consumption_tax';
 const String columnExpenseAmountIncludingTax = 'expense_amount_including_tax';
@@ -20,6 +21,7 @@ const List<String> expensecolumns = [
   columnExpenseCategoryCode,
   columnExpenseGenreCode,
   columnPaymentMethodId,
+  // columnExpenseName,
   columnExpenseTotalMoney,
   columnExpenseConsumptionTax,
   columnExpenseAmountIncludingTax,
@@ -60,6 +62,7 @@ class ExpenseDbHelper {
         expense_category_code TEXT,
         expense_genre_code TEXT,
         payment_method_id TEXT,
+        expense_name TEXT,
         expense_total_money INTEGER,
         expense_consumption_tax INTEGER,
         expense_amount_including_tax INTEGER,
@@ -74,7 +77,14 @@ class ExpenseDbHelper {
   Future<List<Expenses>> selectAllExpenses() async {
     final db = await expenseinstance.expensedatabase;
     final expensesData = await db.query('expenses');          // 条件指定しないでcatsテーブルを読み込む
+    return expensesData.map((json) => Expenses.fromJson(json)).toList();    // 読み込んだテーブルデータをListにパースしてreturn
+  }
 
+  //後払い用
+  Future<List<Expenses>> selectDeferredExpenses() async {
+    final db = await expenseinstance.expensedatabase;
+    final String sql = "SELECT * FROM Expenses WHERE expense_genre_code = '後払い'";
+    final expensesData = await db.rawQuery(sql);
     return expensesData.map((json) => Expenses.fromJson(json)).toList();    // 読み込んだテーブルデータをListにパースしてreturn
   }
 

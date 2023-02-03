@@ -26,6 +26,7 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with SingleTicker
   late String expense_category_code;
   late String expense_genre_code;
   late String payment_method_id;
+  // late String expense_name;
   late int expense_total_money;
   late int expense_consumption_tax;
   late int expense_amount_including_tax;
@@ -48,7 +49,7 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with SingleTicker
   final List<String> _income_category = <String>['収入カテゴリの選択','給与','お小遣い'];
   late String _income_category_selected;
   //共通
-  String which = '通常';
+  String which = '通常';//数値
   dynamic expenseDateTime;
   dynamic expenseDateFormat;
   dynamic incomeDateTime;
@@ -62,8 +63,9 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with SingleTicker
     // expense
     expense_id = widget.expenses?.expense_id ?? 0;
     expense_category_code = widget.expenses?.expense_category_code ?? '';
-    expense_genre_code = widget.expenses?.expense_genre_code ?? '通常';
+    expense_genre_code = widget.expenses?.expense_genre_code ?? '';
     payment_method_id = widget.expenses?.payment_method_id ?? '';
+    // expense_name = widget.expenses?.expense_name ?? '';
     expense_total_money = widget.expenses?.expense_total_money ?? 0;
     expense_consumption_tax = widget.expenses?.expense_consumption_tax ?? 0;
     expense_amount_including_tax = widget.expenses?.expense_amount_including_tax ?? 0;
@@ -179,6 +181,7 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with SingleTicker
       expense_category_code: expense_category_code,
       expense_genre_code: expense_genre_code,
       payment_method_id: payment_method_id,
+      // expense_name: expense_name,
       expense_amount_including_tax: expense_amount_including_tax,
       expense_datetime: expense_datetime,
       expense_memo: expense_memo,
@@ -207,6 +210,7 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with SingleTicker
       expense_category_code: expense_category_code,
       expense_genre_code: expense_genre_code,
       payment_method_id: payment_method_id,
+      // expense_name: expense_name,
       expense_total_money: 0,
       expense_consumption_tax: 0,
       expense_amount_including_tax: expense_amount_including_tax,
@@ -262,10 +266,10 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with SingleTicker
                     ),
                   ),
 
-                  const SizedBox(height: 20,),
+                  // const SizedBox(height: 10,),
 
                   Container(
-                    height: 480,
+                    height: 500,
                     child: TabBarView(
                       children: <Widget>[
 
@@ -277,17 +281,48 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with SingleTicker
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children:[
                                     Radio(
-                                        value: '通常',
+                                        value: '通常',//0
                                         groupValue: which,
                                         onChanged: _onChangedGenre
                                     ),
                                     const Text('通常', style: TextStyle(fontSize: 25),),
                                     Radio(
-                                        value: '後払い',
+                                        value: '後払い',//1
                                         groupValue: which,
                                         onChanged: _onChangedGenre
                                     ),
                                     const Text('後払い', style: TextStyle(fontSize: 25),),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                width: 350,
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                      bottom: BorderSide(),
+                                    )),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Container(
+                                      margin: EdgeInsets.all(15),
+                                      child:  const Text(
+                                        '支払名',
+                                        style: TextStyle(fontSize: 15),
+                                      ),
+                                    ),
+                                    // SizedBox(
+                                    //   width: 230,
+                                    //   height: 30,
+                                    //   child: TextFormField(
+                                    //     initialValue: expense_name,
+                                    //     decoration: InputDecoration(
+                                    //       contentPadding: EdgeInsets.all(0),
+                                    //       border: OutlineInputBorder(),
+                                    //     ),
+                                    //     onChanged: (deferred_payment_change_name) => setState(() => this.expense_name = deferred_payment_change_name),
+                                    //   ),
+                                    // ),
                                   ],
                                 ),
                               ),
@@ -307,7 +342,7 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with SingleTicker
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 20,),
+                              const SizedBox(height: 5,),
                               Container(
                                 child: OutlinedButton(
                                     child:Text(expenseDateFormat),

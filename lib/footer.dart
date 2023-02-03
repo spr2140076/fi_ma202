@@ -6,6 +6,7 @@ import 'package:fi_ma/view/register/exin_list.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fi_ma/view/menu.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class MyApp extends StatelessWidget {
   @override
@@ -14,6 +15,10 @@ class MyApp extends StatelessWidget {
     theme: ThemeData(
       primarySwatch: Colors.orange,
     ),
+    localizationsDelegates: [
+      GlobalMaterialLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+    ],
     home: StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {

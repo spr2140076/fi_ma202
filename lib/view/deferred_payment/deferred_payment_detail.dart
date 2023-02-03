@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../model/deferred_payment/deferred_payment_db_helper.dart';
 import '../../model/deferred_payment/deferred_payments.dart';
+import '../../model/register/expense_db_helper.dart';
+import '../../model/register/expenses.dart';
+import '../register/exin_detail_edit.dart';
 import 'deferred_payment_detail_edit.dart';
 
 // catsテーブルの中の1件のデータに対する操作を行うクラス
@@ -15,7 +18,7 @@ class DeferredPaymentDetail extends StatefulWidget {
 }
 
 class _DeferredPaymentDetailState extends State<DeferredPaymentDetail> {
-  late DeferredPayments deferred_payments;
+  late Expenses deferred_payments;
   bool isLoading = false;
   static const int textExpandedFlex = 2; // 見出しのexpaded flexの比率
   static const int dataExpandedFlex = 4; // 項目のexpanede flexの比率
@@ -34,7 +37,7 @@ class _DeferredPaymentDetailState extends State<DeferredPaymentDetail> {
 // catsテーブルから指定されたidのデータを1件取得する
   Future deferred_paymentData() async {
     setState(() => isLoading = true);
-    deferred_payments = await DeferredPaymentDbHelper.deferred_paymentinstance.deferred_paymentData(widget.id);
+    deferred_payments = await ExpenseDbHelper.expenseinstance.expenseData(widget.id);
     setState(() => isLoading = false);
   }
 
@@ -48,8 +51,8 @@ class _DeferredPaymentDetailState extends State<DeferredPaymentDetail> {
               onPressed: () async {                          // 鉛筆のアイコンが押されたときの処理を設定
                 await Navigator.of(context).push(            // ページ遷移をNavigatorで設定
                   MaterialPageRoute(
-                    builder: (context) => DeferredPaymentDetailEdit(    // 詳細更新画面を表示する
-                      deferred_payments: deferred_payments,
+                    builder: (context) => ExpenseDetailEdit(    // 詳細更新画面を表示する
+                      expenses: deferred_payments,
                     ),
                   ),
                 );
@@ -59,7 +62,7 @@ class _DeferredPaymentDetailState extends State<DeferredPaymentDetail> {
             ),
             IconButton(
               onPressed: () async {                         // ゴミ箱のアイコンが押されたときの処理を設定
-                await DeferredPaymentDbHelper.deferred_paymentinstance.deferred_paymentdelete(widget.id);  // 指定されたidのデータを削除する
+                await ExpenseDbHelper.expenseinstance.expensedelete(widget.id);  // 指定されたidのデータを削除する
                 Navigator.of(context).pop();                // 削除後に前の画面に戻る
               },
               icon: const Icon(Icons.delete),               // ゴミ箱マークのアイコンを表示
@@ -87,7 +90,7 @@ class _DeferredPaymentDetailState extends State<DeferredPaymentDetail> {
                     flex: dataExpandedFlex,
                     child: Container(                           // catsテーブルのnameの表示を設定
                       padding: const EdgeInsets.all(5.0),
-                      child: Text(DateFormat("yyyy年MM月dd日").format(deferred_payments.deferred_payment_datetime),style: const TextStyle(fontSize: 20),),
+                      child: Text(DateFormat("yyyy年MM月dd日").format(deferred_payments.expense_datetime),style: const TextStyle(fontSize: 20),),
                     ),
                   ),
                 ],),
@@ -103,7 +106,7 @@ class _DeferredPaymentDetailState extends State<DeferredPaymentDetail> {
                       flex: dataExpandedFlex,
                       child: Container(
                         padding: const EdgeInsets.all(5.0),
-                        child: Text(deferred_payments.deferred_payment_name,style: const TextStyle(fontSize: 20),),
+                        // child: Text(deferred_payments.expense_name,style: const TextStyle(fontSize: 20),),
                       )
                   ),
                 ],),
@@ -119,7 +122,7 @@ class _DeferredPaymentDetailState extends State<DeferredPaymentDetail> {
                     flex: dataExpandedFlex,
                     child: Container(                                      // catsテーブルのmemoの表示を設定
                       padding: const EdgeInsets.all(5.0),
-                      child: Text(deferred_payments.deferred_payment_amount_including_tax.toString(),style: const TextStyle(fontSize: 20),),
+                      child: Text(deferred_payments.expense_amount_including_tax.toString(),style: const TextStyle(fontSize: 20),),
                     ),
                   ),
                 ],),
@@ -135,7 +138,7 @@ class _DeferredPaymentDetailState extends State<DeferredPaymentDetail> {
                     flex: dataExpandedFlex,
                     child: Container(                                      // catsテーブルのbirthdayの表示を設定
                       padding: const EdgeInsets.all(5.0),
-                      child: Text(deferred_payments.deferred_payment_category_code,style: const TextStyle(fontSize: 20),),
+                      child: Text(deferred_payments.expense_category_code,style: const TextStyle(fontSize: 20),),
                     ),
                   )
                 ],),
@@ -151,7 +154,7 @@ class _DeferredPaymentDetailState extends State<DeferredPaymentDetail> {
                     flex: dataExpandedFlex,
                     child: Container(                                      // catsテーブルのmemoの表示を設定
                       padding: const EdgeInsets.all(5.0),
-                      child: Text(deferred_payments.deferred_payment_genre_code,style: const TextStyle(fontSize: 20),),
+                      child: Text(deferred_payments.expense_genre_code,style: const TextStyle(fontSize: 20),),
                     ),
                   ),
                 ],),
@@ -183,7 +186,7 @@ class _DeferredPaymentDetailState extends State<DeferredPaymentDetail> {
                     flex: dataExpandedFlex,
                     child: Container(                                      // catsテーブルのmemoの表示を設定
                       padding: const EdgeInsets.all(5.0),
-                      child: Text(deferred_payments.deferred_payment_memo,style: const TextStyle(fontSize: 20),),
+                      child: Text(deferred_payments.expense_memo,style: const TextStyle(fontSize: 20),),
                     ),
                   ),
                 ],),
