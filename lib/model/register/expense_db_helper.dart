@@ -1,6 +1,7 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'expenses.dart';
+import 'incomes.dart';
 
 const String columnExpenseId = '_expense_id';
 const String columnExpenseCategoryCode = 'expense_category_code';
@@ -126,4 +127,10 @@ class ExpenseDbHelper {
       whereArgs: [id],
     );
   }
+
+  // Future fullDeleteExpenses(Database db, Expenses expenses) async {
+  //   await db.delete('expenses');
+  // }
+
+
 }

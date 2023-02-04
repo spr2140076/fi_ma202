@@ -104,4 +104,8 @@ class IncomeDbHelper {
       whereArgs: [id],
     );
   }
+
+  // Future fullDeleteIncomes(Database db, Incomes incomes) async {
+  //   await db.delete('incomes');
+  // }
 }

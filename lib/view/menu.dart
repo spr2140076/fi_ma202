@@ -1,11 +1,14 @@
 import 'package:fi_ma/login.dart';
+import 'package:fi_ma/model/register/income_db_helper.dart';
+import 'package:fi_ma/model/register/incomes.dart';
 import 'package:fi_ma/view/notification.dart';
 import 'package:fi_ma/view/register/exin_detail_edit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:fi_ma/model/register/expense_db_helper.dart';
 import '../main.dart';
+import '../model/register/expenses.dart';
 
 class Menu extends ConsumerWidget {
   const Menu({super.key, });
@@ -15,6 +18,14 @@ class Menu extends ConsumerWidget {
 // }
 //
 // class _Menu extends State<Menu> {
+
+  Future deleteTable() async {
+    final db = await ExpenseDbHelper.expenseinstance.expensedatabase;
+    final incomedb = await IncomeDbHelper.incomeinstance.incomedatabase;
+    await db.delete('Expenses');
+    await incomedb.delete('Incomes');
+  }
+
   @override
   Widget build(BuildContext context,WidgetRef ref) {
     final googleProvider = ref.watch(googlSignInProvider);
@@ -129,6 +140,11 @@ class Menu extends ConsumerWidget {
                             isDestructiveAction: true,
                             child: Text('リセット'),
                             onPressed: (){
+                              // fullDeleteExpenses();
+                              // fullDeleteIncomes();
+                              // deleteTable(Expenses,Incomes);
+                              deleteTable();
+
                               Navigator.pop(context);
                             },
                           ),
@@ -152,6 +168,7 @@ class Menu extends ConsumerWidget {
         },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
+        backgroundColor: Colors.pink[50],
       ),
     );
   }
