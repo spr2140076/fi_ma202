@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:intl/intl.dart';
+import '../../model/register/expense_db_helper.dart';
 import '../register/exin_detail_edit.dart';
 
 // void main() {
@@ -36,6 +37,12 @@ class _Budget extends State<Budget> {
   double day = 0;
   double weekbudget = 0;
   double daybudget = 0;
+  DateTime _now = DateTime.now();
+  bool isLoading = false;
+  List<Map<String, dynamic>> totalExpense = [];
+  List<Map<String, dynamic>> totalExpenseToday = [];
+  int total = 0;
+  int totalToday = 0;
 
   TextEditingController moneyController = TextEditingController();
 
@@ -47,6 +54,41 @@ class _Budget extends State<Budget> {
   double dayCalc(double week) {
     day = (week / 30);
     return day;
+  }
+
+  Future getExpenseData() async {
+    setState(() => isLoading = true);
+    _now = DateTime.now();
+    var dtFormat = DateFormat("yy-MM");
+    String strDate = dtFormat.format(_now);
+    final db = await ExpenseDbHelper.expenseinstance.expensedatabase;
+    final String sql = "SELECT expense_amount_including_tax FROM Expenses WHERE expense_datetime LIKE '%$strDate%'";
+    final List<Map<String, dynamic>> result = await db.rawQuery(sql);
+    totalExpense = result;
+
+    for(int i = 0; i < result.length; i++) {
+      int sum = result[i]['expense_amount_including_tax'];
+      total += sum;
+    }
+    setState(() => isLoading = false);
+  }
+
+  Future getExpenseDataToday() async {
+    setState(() => isLoading = true);
+    _now = DateTime.now();
+    var dtFormat = DateFormat("yy-MM-dd");
+    String strDate = dtFormat.format(_now);
+    print(strDate);
+    final db = await ExpenseDbHelper.expenseinstance.expensedatabase;
+    final String sql = "SELECT expense_amount_including_tax FROM Expenses WHERE expense_datetime LIKE '%$strDate%'";
+    final List<Map<String, dynamic>> result = await db.rawQuery(sql);
+    totalExpenseToday = result;
+
+    for(int i = 0; i < result.length; i++) {
+      int sum = result[i]['expense_amount_including_tax'];
+      totalToday += sum;
+    }
+    setState(() => isLoading = false);
   }
 
   @override
@@ -66,7 +108,7 @@ class _Budget extends State<Budget> {
       body: Center(
         child: Column(
           children: <Widget>[
-            SizedBox(height: 60,),
+            SizedBox(height: 20,),
             Container(
               width: double.infinity,
               height: 80,
@@ -102,13 +144,15 @@ class _Budget extends State<Budget> {
                           weekbudget = weekCalc(month);
                           daybudget =  dayCalc(month) as double;
                         });
+                        getExpenseData();
+                        getExpenseDataToday();
                       },
                     ),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 40,),
+            SizedBox(height: 20,),
             Container(
               width: double.infinity,
               height: 40,
@@ -132,7 +176,7 @@ class _Budget extends State<Budget> {
                   SizedBox(width: 25,),
                   Text('¥', style: TextStyle(fontSize: 30),),
                   SizedBox(width: 10,),
-                  Text('30,000', style: TextStyle(fontSize: 30),),
+                  Text(total.toString(), style: TextStyle(fontSize: 30),),
                   SizedBox(width: 10,),
                   Text('/', style: TextStyle(fontSize: 30),),
                   SizedBox(width: 10,),
@@ -188,7 +232,7 @@ class _Budget extends State<Budget> {
                   SizedBox(width: 25,),
                   Text('¥', style: TextStyle(fontSize: 30),),
                   SizedBox(width: 10,),
-                  Text('2,000', style: TextStyle(fontSize: 30),),
+                  Text(totalToday.toString(), style: TextStyle(fontSize: 30),),
                   SizedBox(width: 10,),
                   Text('/', style: TextStyle(fontSize: 30),),
                   SizedBox(width: 10,),

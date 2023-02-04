@@ -36,7 +36,7 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with WidgetsBindi
   late String expense_memo;
   late DateTime expense_created_at;
   late DateTime expense_updated_at;
-  final List<String> _expense_category = <String>['支出カテゴリの選択','食費', '交通費', '固定費', '交際費'];
+  final List<String> _expense_category = <String>['支出カテゴリの選択','食費', '交通費', '固定費', '交際費','日用品','衣服','医療費','娯楽','その他'];
   late String _expense_category_selected;
   final List<String> _payment= <String>['支払い方法を選択','現金', 'クレジット', '電子マネー'];
   late String _payment_selected;
@@ -77,7 +77,7 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with WidgetsBindi
     // expense
     expense_id = widget.expenses?.expense_id ?? 0;
     expense_category_code = widget.expenses?.expense_category_code ?? '';
-    expense_genre_code = widget.expenses?.expense_genre_code ?? '';
+    expense_genre_code = widget.expenses?.expense_genre_code ?? '通常';
     payment_method_id = widget.expenses?.payment_method_id ?? '';
     expense_name = widget.expenses?.expense_name ?? '';
     expense_total_money = widget.expenses?.expense_total_money ?? 0;

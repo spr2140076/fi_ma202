@@ -1,13 +1,13 @@
-// import 'package:fi_ma/footer.dart';
+import 'package:fi_ma/footer.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-// import '../../model/deferred_payment/deferred_payment_db_helper.dart';
-// import '../../model/deferred_payment/deferred_payments.dart';
+import '../../model/deferred_payment/deferred_payment_db_helper.dart';
+import '../../model/deferred_payment/deferred_payments.dart';
 import '../../model/register/expense_db_helper.dart';
 import '../../model/register/expenses.dart';
 import '../register/exin_detail_edit.dart';
 import 'deferred_payment_detail.dart';
-// import 'deferred_payment_detail_edit.dart';
+import 'deferred_payment_detail_edit.dart';
 
 // catテーブルの内容全件を一覧表示するクラス
 class DeferredPaymentList extends StatefulWidget {
@@ -20,6 +20,8 @@ class DeferredPaymentList extends StatefulWidget {
 class _DeferredPaymentListPageState extends State<DeferredPaymentList> {
   List<Expenses> deferred_paymentList = [];  //catsテーブルの全件を保有する
   bool isLoading = false;   //テーブル読み込み中の状態を保有する
+  late List<Map<String, dynamic>> totalExpenseList;
+  late DateTime _now;
 
 // Stateのサブクラスを作成し、initStateをオーバーライドすると、wedgit作成時に処理を動かすことができる。
 // ここでは、初期処理としてCatsの全データを取得する。
@@ -27,13 +29,15 @@ class _DeferredPaymentListPageState extends State<DeferredPaymentList> {
   void initState() {
     super.initState();
     getDeferredPaymentsList();
+    totalExpenseList = [];
+    _now = DateTime.now();
   }
 
 // initStateで動かす処理。
 // catsテーブルに登録されている全データを取ってくる
   Future getDeferredPaymentsList() async {
     setState(() => isLoading = true);                   //テーブル読み込み前に「読み込み中」の状態にする
-    deferred_paymentList = await ExpenseDbHelper.expenseinstance.selectDeferredExpenses();  //catsテーブルを全件読み込む
+    deferred_paymentList = await ExpenseDbHelper.expenseinstance.selectDefExpenses();  //catsテーブルを全件読み込む
     setState(() => isLoading = false);                  //「読み込み済」の状態にする
   }
 

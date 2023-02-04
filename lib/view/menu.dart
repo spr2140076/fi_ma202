@@ -46,8 +46,8 @@ class Menu extends ConsumerWidget {
               child: ElevatedButton(
                 child:  Text('通知' ,style: TextStyle(fontSize: 25),),
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.orange,
-                  onPrimary: Colors.black,
+                  backgroundColor: Colors.orange,
+                  foregroundColor: Colors.black,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -69,8 +69,8 @@ class Menu extends ConsumerWidget {
               child: ElevatedButton(
                 child: const Text('ログアウト', style: TextStyle(fontSize: 22),),
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.orange,
-                  onPrimary: Colors.black,
+                  backgroundColor: Colors.orange,
+                  foregroundColor: Colors.black,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -116,8 +116,8 @@ class Menu extends ConsumerWidget {
               child: ElevatedButton(
                 child: const Text('リセット', style: TextStyle(fontSize: 25),),
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.orange,
-                  onPrimary: Colors.black,
+                  backgroundColor: Colors.orange,
+                  foregroundColor: Colors.black,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
