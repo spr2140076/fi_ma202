@@ -1,8 +1,6 @@
 import 'package:fi_ma/footer.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../model/deferred_payment/deferred_payment_db_helper.dart';
-import '../../model/deferred_payment/deferred_payments.dart';
 import '../../model/register/expense_db_helper.dart';
 import '../../model/register/expenses.dart';
 import '../register/exin_detail_edit.dart';

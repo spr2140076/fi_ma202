@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../model/register/expense_db_helper.dart';
+import '../register/exin_detail_edit.dart';
 
 // void main() {
 //   runApp(const MyApp());
@@ -30,23 +31,33 @@ class Budget extends StatefulWidget {
   State<Budget> createState() => _Budget();
 }
 
+double month = 0;
+double week = 0;
+double day = 0;
+double weekbudget = 0;
+double daybudget = 0;
+int total = 0;
+int totalToday = 0;
+int totalWeek = 0;
+final formatter = NumberFormat("#,###");
+
 class _Budget extends State<Budget> {
 
-  double month = 0;
-  double week = 0;
-  double day = 0;
-  double weekbudget = 0;
-  double daybudget = 0;
+  // double month = 0;
+  // double week = 0;
+  // double day = 0;
+  // double weekbudget = 0;
+  // double daybudget = 0;
   DateTime _now = DateTime.now();
   bool isLoading = false;
   List<Map<String, dynamic>> totalExpense = [];
   List<Map<String, dynamic>> totalExpenseToday = [];
   List<Map<String, dynamic>> totalExpenseWeek = [];
-  int total = 0;
-  int totalToday = 0;
-  int totalWeek = 0;
+  // int total = 0;
+  // int totalToday = 0;
+  // int totalWeek = 0;
   DateTime mon = DateTime.now().subtract(Duration(days: DateTime.now().weekday - 1));
-  DateTime sun = DateTime.now().subtract(Duration(days: DateTime.now().weekday - 7));
+  DateTime sun = DateTime.now().subtract(Duration(days: DateTime.now().weekday - 8));
 
 
   TextEditingController moneyController = TextEditingController();
@@ -63,6 +74,7 @@ class _Budget extends State<Budget> {
 
   Future getExpenseData() async {
     setState(() => isLoading = true);
+    total = 0;
     _now = DateTime.now();
     var dtFormat = DateFormat("yy-MM");
     String strDate = dtFormat.format(_now);
@@ -80,6 +92,7 @@ class _Budget extends State<Budget> {
 
   Future getExpenseDataToday() async {
     setState(() => isLoading = true);
+    totalToday = 0;
     _now = DateTime.now();
     var dtFormat = DateFormat("yy-MM-dd");
     String strDate = dtFormat.format(_now);
@@ -97,11 +110,12 @@ class _Budget extends State<Budget> {
 
   Future getExpenseDataToweek() async {
     setState(() => isLoading = true);
+    totalWeek = 0;
     _now = DateTime.now();
     var dtFormat = DateFormat("yyyy-MM-dd");
     String strMon = dtFormat.format(mon);
     String strSun = dtFormat.format(sun);
-    // print(strSun);
+    print(strSun);
     // print(strDate);
     // print(mon);
     final db = await ExpenseDbHelper.expenseinstance.expensedatabase;
@@ -200,13 +214,13 @@ class _Budget extends State<Budget> {
                   SizedBox(width: 25,),
                   Text('¥', style: TextStyle(fontSize: 30),),
                   SizedBox(width: 10,),
-                  Text(total.toString(), style: TextStyle(fontSize: 30),),
+                  Text(formatter.format(total), style: TextStyle(fontSize: 30),),
                   SizedBox(width: 10,),
                   Text('/', style: TextStyle(fontSize: 30),),
                   SizedBox(width: 10,),
                   Text('¥', style: TextStyle(fontSize: 30),),
                   SizedBox(width: 10,),
-                  Text((month.floor()).toString(), style: TextStyle(fontSize:30),),
+                  Text(formatter.format(month.floor()), style: TextStyle(fontSize:30),),
                 ],
               ),
             ),
@@ -228,13 +242,13 @@ class _Budget extends State<Budget> {
                   SizedBox(width: 25,),
                   Text('¥', style: TextStyle(fontSize: 30),),
                   SizedBox(width: 10,),
-                  Text(totalWeek.toString(), style: TextStyle(fontSize: 30),),
+                  Text(formatter.format(totalWeek), style: TextStyle(fontSize: 30),),
                   SizedBox(width: 10,),
                   Text('/', style: TextStyle(fontSize: 30),),
                   SizedBox(width: 10,),
                   Text('¥', style: TextStyle(fontSize: 30),),
                   SizedBox(width: 10,),
-                  Text((weekbudget.floor()).toString(), style: TextStyle(fontSize:30),),
+                  Text(formatter.format(weekbudget.floor()), style: TextStyle(fontSize:30),),
                 ],
               ),
             ),
@@ -256,24 +270,32 @@ class _Budget extends State<Budget> {
                   SizedBox(width: 25,),
                   Text('¥', style: TextStyle(fontSize: 30),),
                   SizedBox(width: 10,),
-                  Text(totalToday.toString(), style: TextStyle(fontSize: 30),),
+                  Text(formatter.format(totalToday), style: TextStyle(fontSize: 30),),
                   SizedBox(width: 10,),
                   Text('/', style: TextStyle(fontSize: 30),),
                   SizedBox(width: 10,),
                   Text('¥', style: TextStyle(fontSize: 30),),
                   SizedBox(width: 10,),
-                  Text((daybudget.floor()).toString(), style: TextStyle(fontSize:30),),
+                  Text(formatter.format(daybudget.floor()), style: TextStyle(fontSize:30),),
                 ],
               ),
             ),
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {},
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.add),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {                                       // ＋ボタンを押したときの処理を設定
+          await Navigator.of(context).push(                         // ページ遷移をNavigatorで設定
+            MaterialPageRoute(
+                builder: (context) => const ExpenseDetailEdit()           // 詳細更新画面（元ネタがないから新規登録）を表示するcat_detail_edit.dartへ遷移
+            ),
+          );
+        },
+        tooltip: 'Increment',
+        child: const Icon(Icons.add),
+        // backgroundColor: Colors.pink[50],
+        backgroundColor: Colors.orange,
+      ),
     );
   }
 }

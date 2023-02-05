@@ -1,6 +1,7 @@
 import 'package:fi_ma/login.dart';
 import 'package:fi_ma/model/register/income_db_helper.dart';
 import 'package:fi_ma/model/register/incomes.dart';
+import 'package:fi_ma/view/budget/budget.dart';
 import 'package:fi_ma/view/notification.dart';
 import 'package:fi_ma/view/register/exin_detail_edit.dart';
 import 'package:flutter/cupertino.dart';
@@ -145,6 +146,13 @@ class Menu extends ConsumerWidget {
                               // fullDeleteIncomes();
                               // deleteTable(Expenses,Incomes);
                               deleteTable();
+                              month = 0;
+                              weekbudget = 0;
+                              daybudget = 0;
+                              total = 0;
+                              totalWeek = 0;
+                              totalToday = 0;
+
 
                               Navigator.pop(context);
                             },

@@ -147,9 +147,10 @@ class _ExpenseListPageState extends State<ExpenseList> {
                                     child: Padding(               // cardのpadding設定
                                       padding: const EdgeInsets.all(15.0),
                                       child: Row(                 // cardの中身をRowで設定
-                                          children: <Widget>[               // Rowの中身を設定
+                                          children: <Widget>[
+                                            Text(DateFormat("MM月dd日 ").format(income.income_day),style: const TextStyle(fontSize: 20)),// Rowの中身を設定
                                             Text('￥',style: const TextStyle(fontSize: 30),),
-                                            Text(income.income_money.toString() ,style: const TextStyle(fontSize: 30),),     // catのnameを表示
+                                            Text(formatter.format(income.income_money),style: const TextStyle(fontSize: 30),),     // catのnameを表示
                                           ]
                                       ),
                                     ),

@@ -95,6 +95,23 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
                 Row(children: [
                   const Expanded(     // 「メモ」の見出し行の設定
                       flex: textExpandedFlex,
+                      child: Text('支払い名',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 20),
+                      )
+                  ),
+                  Expanded(
+                    flex: dataExpandedFlex,
+                    child: Container(                                      // catsテーブルのmemoの表示を設定
+                      padding: const EdgeInsets.all(5.0),
+                      child: Text(expenses.expense_name.toString(),
+                        style: const TextStyle(fontSize: 20),),
+                    ),
+                  ),
+                ],),
+                Row(children: [
+                  const Expanded(     // 「メモ」の見出し行の設定
+                      flex: textExpandedFlex,
                       child: Text('税込金額',
                         textAlign: TextAlign.center,
                         style: const TextStyle(fontSize: 20),

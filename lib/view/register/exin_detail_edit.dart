@@ -189,19 +189,19 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with WidgetsBindi
       await updateExpense();                        // updateの処理
     } else {
       await createExpense();
-      if(which == '後払い'){
-        await _cancelNotification();
-        await _requestPermissions();
-        final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
-        await _registerMessage(
-          year: dateYear,
-          month: dateMonth,
-          day: dateDay - 3,
-          hour: now.hour,
-          minute: now.minute + 1,
-          message: '支払期限が近づいています',
-        );
-      }// insertの処理
+      // if(which == '後払い'){
+      //   await _cancelNotification();
+      //   await _requestPermissions();
+      //   final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+      //   await _registerMessage(
+      //     year: dateYear,
+      //     month: dateMonth,
+      //     day: dateDay - 3,
+      //     hour: now.hour,
+      //     minute: now.minute + 1,
+      //     message: '支払期限が近づいています',
+      //   );
+      // }// insertの処理
     }
     Navigator.of(context).pop();               // 前の画面に戻る
   }
@@ -458,7 +458,7 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with WidgetsBindi
                               Visibility(
                                 visible: isShow,
                                 child: Container(
-                                  width: 300,
+                                  width: 500,
                                   decoration: BoxDecoration(
                                       border: Border(
                                         bottom: BorderSide(),
@@ -469,18 +469,24 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with WidgetsBindi
                                       Container(
                                         margin: EdgeInsets.all(15),
                                         child:  const Text(
-                                          '品目',
+                                          '支払い名',
                                           style: TextStyle(fontSize: 15),
                                         ),
                                       ),
-                                      SizedBox(
-                                        width: 230,
-                                        height: 40,
-                                        child: TextField(
-                                          decoration: InputDecoration(
-                                            contentPadding: EdgeInsets.all(0),
-                                            border: OutlineInputBorder(),
+                                      Container(
+                                        width: 250,
+                                        child: TextFormField(
+                                          initialValue: expense_name,
+                                          decoration: const InputDecoration(
+                                              hintText: '支払い名を入力してください',
+                                              enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(width: 2),
+                                              ),
+                                              contentPadding: EdgeInsets.symmetric(
+                                                vertical: 10,
+                                              )
                                           ),
+                                          onChanged: (expense_change_name) => setState(() => this.expense_name = expense_change_name),
                                         ),
                                       ),
                                     ],
@@ -496,7 +502,11 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with WidgetsBindi
                                 ),
                                 child: Center(
                                   child: TextFormField(
-                                      initialValue: expense_amount_including_tax.toString(), style: const TextStyle(fontSize: 35),
+                                    decoration: const InputDecoration(
+                                        hintText: '￥0',
+                                        ),
+                                      // initialValue: expense_amount_including_tax.toString(),
+                                      style: const TextStyle(fontSize: 30),
                                       textAlign: TextAlign.right,
                                       keyboardType: TextInputType.number,
                                       onChanged: (change_expense_money) => setState(() => expense_amount_including_tax = int.parse(change_expense_money))
@@ -645,7 +655,11 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with WidgetsBindi
                                 ),
                                 child: Center(
                                   child: TextFormField(
-                                      initialValue: income_money.toString(), style: const TextStyle(fontSize: 35),
+                                      decoration: const InputDecoration(
+                                        hintText: '￥0',
+                                      ),
+                                      // initialValue: income_money.toString(),
+                                      style: const TextStyle(fontSize: 35),
                                       textAlign: TextAlign.right,
                                       keyboardType: TextInputType.number,
                                       onChanged: (change_income_money) => setState(() => income_money = int.parse(change_income_money))

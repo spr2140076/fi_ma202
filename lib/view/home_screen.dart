@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:fi_ma/model/register/expense_db_helper.dart';
+import 'package:fi_ma/view/budget/budget.dart';
 import 'package:fi_ma/view/register/exin_detail_edit.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -53,6 +54,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late String? oneWeekDate;
   late String aa;
   late DateTime tes;
+  final formatter = NumberFormat("#,###");
 
   @override
   void initState() {
@@ -138,7 +140,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Future getFoodData() async {
     setState(() => isLoading = true);
     final db = await ExpenseDbHelper.expenseinstance.expensedatabase;
-    final String sql = "SELECT expense_amount_including_tax FROM Expenses WHERE expense_category_code = '食費'";
+    var dtFormat = DateFormat("yy-MM");
+    String strDate = dtFormat.format(_now);
+    final String sql = "SELECT expense_amount_including_tax FROM Expenses WHERE expense_category_code = '食費' AND expense_datetime LIKE '%$strDate%'";
     final List<Map<String, dynamic>> result = await db.rawQuery(sql);
 
     foodExpense = result;
@@ -156,7 +160,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Future getTrafficData() async {
     setState(() => isLoading = true);
     final db = await ExpenseDbHelper.expenseinstance.expensedatabase;
-    final String sql = "SELECT expense_amount_including_tax FROM Expenses WHERE expense_category_code = '交通費'";
+    var dtFormat = DateFormat("yy-MM");
+    String strDate = dtFormat.format(_now);
+    final String sql = "SELECT expense_amount_including_tax FROM Expenses WHERE expense_category_code = '交通費' AND expense_datetime LIKE '%$strDate%'";
     final List<Map<String, dynamic>> result = await db.rawQuery(sql);
 
     trafficExpense = result;
@@ -174,7 +180,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Future getFixedCostData() async {
     setState(() => isLoading = true);
     final db = await ExpenseDbHelper.expenseinstance.expensedatabase;
-    final String sql = "SELECT expense_amount_including_tax FROM Expenses WHERE expense_category_code = '固定費'";
+    var dtFormat = DateFormat("yy-MM");
+    String strDate = dtFormat.format(_now);
+    final String sql = "SELECT expense_amount_including_tax FROM Expenses WHERE expense_category_code = '固定費' AND expense_datetime LIKE '%$strDate%'";
     final List<Map<String, dynamic>> result = await db.rawQuery(sql);
 
     fixedCostExpense = result;
@@ -191,7 +199,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Future getDailyNecessitiesData() async {
     setState(() => isLoading = true);
     final db = await ExpenseDbHelper.expenseinstance.expensedatabase;
-    final String sql = "SELECT expense_amount_including_tax FROM Expenses WHERE expense_category_code = '日用品'";
+    var dtFormat = DateFormat("yy-MM");
+    String strDate = dtFormat.format(_now);
+    final String sql = "SELECT expense_amount_including_tax FROM Expenses WHERE expense_category_code = '日用品' AND expense_datetime LIKE '%$strDate%'";
     final List<Map<String, dynamic>> result = await db.rawQuery(sql);
 
     dailyNecessitiesExpense = result;
@@ -208,7 +218,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Future getClothingData() async {
     setState(() => isLoading = true);
     final db = await ExpenseDbHelper.expenseinstance.expensedatabase;
-    final String sql = "SELECT expense_amount_including_tax FROM Expenses WHERE expense_category_code = '衣服'";
+    var dtFormat = DateFormat("yy-MM");
+    String strDate = dtFormat.format(_now);
+    final String sql = "SELECT expense_amount_including_tax FROM Expenses WHERE expense_category_code = '衣服' AND expense_datetime LIKE '%$strDate%'";
     final List<Map<String, dynamic>> result = await db.rawQuery(sql);
 
     clothingExpense = result;
@@ -225,7 +237,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Future getMedicalData() async {
     setState(() => isLoading = true);
     final db = await ExpenseDbHelper.expenseinstance.expensedatabase;
-    final String sql = "SELECT expense_amount_including_tax FROM Expenses WHERE expense_category_code = '医療費'";
+    var dtFormat = DateFormat("yy-MM");
+    String strDate = dtFormat.format(_now);
+    final String sql = "SELECT expense_amount_including_tax FROM Expenses WHERE expense_category_code = '医療費' AND expense_datetime LIKE '%$strDate%'";
     final List<Map<String, dynamic>> result = await db.rawQuery(sql);
 
     medicalExpense = result;
@@ -242,7 +256,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Future getEnterData() async {
     setState(() => isLoading = true);
     final db = await ExpenseDbHelper.expenseinstance.expensedatabase;
-    final String sql = "SELECT expense_amount_including_tax FROM Expenses WHERE expense_category_code = '娯楽'";
+    var dtFormat = DateFormat("yy-MM");
+    String strDate = dtFormat.format(_now);
+    final String sql = "SELECT expense_amount_including_tax FROM Expenses WHERE expense_category_code = '娯楽' AND expense_datetime LIKE '%$strDate%'";
     final List<Map<String, dynamic>> result = await db.rawQuery(sql);
 
     enterExpense = result;
@@ -259,7 +275,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Future getEtcData() async {
     setState(() => isLoading = true);
     final db = await ExpenseDbHelper.expenseinstance.expensedatabase;
-    final String sql = "SELECT expense_amount_including_tax FROM Expenses WHERE expense_category_code = '娯楽'";
+    var dtFormat = DateFormat("yy-MM");
+    String strDate = dtFormat.format(_now);
+    final String sql = "SELECT expense_amount_including_tax FROM Expenses WHERE expense_category_code = 'その他' AND expense_datetime LIKE '%$strDate%'";
     final List<Map<String, dynamic>> result = await db.rawQuery(sql);
 
     etcExpense = result;
@@ -276,7 +294,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Future getEntertainmentData() async {
     setState(() => isLoading = true);
     final db = await ExpenseDbHelper.expenseinstance.expensedatabase;
-    final String sql = "SELECT expense_amount_including_tax FROM Expenses WHERE expense_category_code = '交際費'";
+    var dtFormat = DateFormat("yy-MM");
+    String strDate = dtFormat.format(_now);
+    final String sql = "SELECT expense_amount_including_tax FROM Expenses WHERE expense_category_code = '交際費' AND expense_datetime LIKE '%$strDate%'";
     final List<Map<String, dynamic>> result = await db.rawQuery(sql);
 
     entertainmentExpense = result;
@@ -331,6 +351,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     return Scaffold(
       backgroundColor: Colors.orange[50],
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('Fi-MA', style: TextStyle(fontSize: 25),),
         backgroundColor: Colors.orange,
         centerTitle: true,
@@ -430,14 +451,14 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                                 ),
                                 PieChartSectionData(
                                   borderSide: BorderSide(color: Colors.black, width: 1),
-                                  color: Colors.pinkAccent[50],
+                                  color: Colors.pink[50],
                                   title: "娯楽",
                                   value: enterTotal.toDouble(),
                                   radius: 50,
                                 ),
                                 PieChartSectionData(
                                   borderSide: BorderSide(color: Colors.black, width: 1),
-                                  color: Colors.grey[150],
+                                  color: Colors.grey[100],
                                   title: "その他",
                                   value: etcTotal.toDouble(),
                                   radius: 50,
@@ -455,8 +476,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text('今月の予算', style: TextStyle(fontSize: 30),),
-                        SizedBox(height: 30,),
-                        Text('￥100,000', style: TextStyle(fontSize: 30, decoration: TextDecoration.underline),),
+                        SizedBox(height: 20,),
+                        Text('￥' + formatter.format(month.floor()), style: TextStyle(fontSize: 30),),
                       ],
                     ),
                   ),
