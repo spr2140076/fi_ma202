@@ -24,6 +24,8 @@ class _ExpenseListPageState extends State<ExpenseList> {
   List<Incomes> incomeList = [];
   bool isLoading = false;
   dynamic calendarDateTime;//テーブル読み込み中の状態を保有する
+  final formatter = NumberFormat("#,###");
+
 
 // Stateのサブクラスを作成し、initStateをオーバーライドすると、wedgit作成時に処理を動かすことができる。
 // ここでは、初期処理としてCatsの全データを取得する。
@@ -39,13 +41,13 @@ class _ExpenseListPageState extends State<ExpenseList> {
 // catsテーブルに登録されている全データを取ってくる
   Future getExpensesList() async {
     setState(() => isLoading = true);                   //テーブル読み込み前に「読み込み中」の状態にする
-    expenseList = await ExpenseDbHelper.expenseinstance.selectDefExpenses(); //catsテーブルを全件読み込む
+    expenseList = await ExpenseDbHelper.expenseinstance.selectToMonthExpenses(); //catsテーブルを全件読み込む
     setState(() => isLoading = false);                  //「読み込み済」の状態にする
   }
 
   Future getIncomesList() async {
     setState(() => isLoading = true);
-    incomeList = await IncomeDbHelper.incomeinstance.selectAllIncomes();
+    incomeList = await IncomeDbHelper.incomeinstance.selectToMonthIncomes();
     setState(() => isLoading = false);
   }
 
@@ -61,6 +63,7 @@ class _ExpenseListPageState extends State<ExpenseList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.orange[50],
       appBar: AppBar(
         actions: [
           IconButton(
@@ -114,7 +117,7 @@ class _ExpenseListPageState extends State<ExpenseList> {
                                           children: <Widget>[
                                             Text(DateFormat("MM月dd日 ").format(expense.expense_datetime),style: const TextStyle(fontSize: 20)),// Rowの中身を設定
                                             Text('￥',style: const TextStyle(fontSize: 30),),
-                                            Text(expense.expense_amount_including_tax.toString() ,style: const TextStyle(fontSize: 30),),     // catのnameを表示
+                                            Text(formatter.format(expense.expense_amount_including_tax) ,style: const TextStyle(fontSize: 30),),       // catのnameを表示
                                           ]
                                       ),
                                     ),

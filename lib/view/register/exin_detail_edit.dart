@@ -58,6 +58,11 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with WidgetsBindi
   dynamic incomeDateFormat;
   String? incomeItem = '収入カテゴリの選択';
 
+  late List<Map<String, dynamic>> totalExpense;
+  bool isLoading = false;
+  late DateTime _now;
+  late int total;
+
   bool get isShow {
     return which == '後払い';
   }
@@ -108,6 +113,10 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with WidgetsBindi
     dateYear = DateTime.now();
     dateMonth = DateTime.now();
     dateDay = DateTime.now();
+
+    totalExpense = [];
+    _now = DateTime.now();
+    total = 0;
   }
 
   void _onChangedExpenseCategory(String? value) {
@@ -268,6 +277,23 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with WidgetsBindi
     await IncomeDbHelper.incomeinstance.incomeinsert(income);        // catの内容で追加する
   }
 
+  Future getExpenseData() async {
+    setState(() => isLoading = true);
+
+    var dtFormat = DateFormat("yy-MM");
+    String strDate = dtFormat.format(_now);
+    final db = await ExpenseDbHelper.expenseinstance.expensedatabase;
+    final String sql = "SELECT expense_amount_including_tax FROM Expenses WHERE expense_datetime LIKE '%$strDate%'";
+    final List<Map<String, dynamic>> result = await db.rawQuery(sql);
+    totalExpense = result;
+
+    for(int i = 0; i < result.length; i++) {
+      int sum = result[i]['expense_amount_including_tax'];
+      total += sum;
+    }
+    setState(() => isLoading = false);
+  }
+
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
@@ -372,6 +398,7 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with WidgetsBindi
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.orange[50],
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black, size: 50,),
@@ -402,7 +429,7 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with WidgetsBindi
                   // const SizedBox(height: 10,),
 
                   Container(
-                    height: 500,
+                    height: 480,
                     child: TabBarView(
                       children: <Widget>[
 
@@ -535,7 +562,7 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with WidgetsBindi
                               Container(
                                 child: const Align(
                                   alignment: Alignment(-0.7,0),
-                                  child: Text('メモ', style: TextStyle(fontSize: 25),),
+                                  child: Text('メモ', style: TextStyle(fontSize: 20),),
                                 ),
                               ),
                               Container(
@@ -554,13 +581,16 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with WidgetsBindi
                                   onChanged: (expense_change_memo) => setState(() => this.expense_memo = expense_change_memo),
                                 ),
                               ),
-                              const SizedBox(height: 20,),
+                              const SizedBox(height: 10,),
                               Container(
                                 height: 50,
                                 width: 100,
                                 child: ElevatedButton(
                                   child: const Text('登録', style: TextStyle(fontSize: 20),),
-                                  onPressed: createOrUpdateExpense,
+                                  onPressed: () {
+                                    createOrUpdateExpense();
+                                    getExpenseData();
+                                  }
                                 ),
                               ),
                             ],

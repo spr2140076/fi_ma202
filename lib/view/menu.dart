@@ -31,6 +31,7 @@ class Menu extends ConsumerWidget {
     final googleProvider = ref.watch(googlSignInProvider);
 
     return Scaffold(
+      backgroundColor: Colors.orange[50],
       appBar: AppBar(
         title: Text('メニュー', style: TextStyle(fontSize: 25),),
         centerTitle: true,
@@ -168,7 +169,8 @@ class Menu extends ConsumerWidget {
         },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-        backgroundColor: Colors.pink[50],
+        // backgroundColor: Colors.pink[50],
+        backgroundColor: Colors.orange,
       ),
     );
   }

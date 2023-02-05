@@ -44,6 +44,7 @@ class _DeferredPaymentDetailState extends State<DeferredPaymentDetail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.orange[50],
         appBar: AppBar(
           title: const Text('後払い詳細'),
           actions: [
@@ -102,13 +103,13 @@ class _DeferredPaymentDetailState extends State<DeferredPaymentDetail> {
                       style: const TextStyle(fontSize: 20),
                     ),
                   ),
-                  Expanded(
-                      flex: dataExpandedFlex,
-                      child: Container(
-                        padding: const EdgeInsets.all(5.0),
-                        // child: Text(deferred_payments.expense_name,style: const TextStyle(fontSize: 20),),
-                      )
-                  ),
+                  // Expanded(
+                  //     flex: dataExpandedFlex,
+                  //     child: Container(
+                  //       padding: const EdgeInsets.all(5.0),
+                  //       // child: Text(deferred_payments.expense_name,style: const TextStyle(fontSize: 20),),
+                  //     )
+                  // ),
                 ],),
                 Row(children: [
                   const Expanded(     // 「メモ」の見出し行の設定
