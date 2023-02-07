@@ -65,6 +65,7 @@ class _ExpenseListPageState extends State<ExpenseList> {
     return Scaffold(
       backgroundColor: Colors.orange[50],
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
             onPressed: () {

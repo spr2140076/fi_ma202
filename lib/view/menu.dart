@@ -34,6 +34,7 @@ class Menu extends ConsumerWidget {
     return Scaffold(
       backgroundColor: Colors.orange[50],
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text('メニュー', style: TextStyle(fontSize: 25),),
         centerTitle: true,
       ),

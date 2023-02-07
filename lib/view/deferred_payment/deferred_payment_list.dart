@@ -46,6 +46,7 @@ class _DeferredPaymentListPageState extends State<DeferredPaymentList> {
     return Scaffold(
       backgroundColor: Colors.orange[50],
       appBar: AppBar(
+        automaticallyImplyLeading: false,
           title: const Text('後払い一覧', style: TextStyle(fontSize: 25),),
           centerTitle: true,
       ),

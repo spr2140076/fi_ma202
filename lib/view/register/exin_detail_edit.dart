@@ -505,7 +505,7 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with WidgetsBindi
                                     decoration: const InputDecoration(
                                         hintText: '￥0',
                                         ),
-                                      // initialValue: expense_amount_including_tax.toString(),
+                                      initialValue: expense_amount_including_tax.toString(),
                                       style: const TextStyle(fontSize: 30),
                                       textAlign: TextAlign.right,
                                       keyboardType: TextInputType.number,
@@ -658,7 +658,7 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with WidgetsBindi
                                       decoration: const InputDecoration(
                                         hintText: '￥0',
                                       ),
-                                      // initialValue: income_money.toString(),
+                                      initialValue: income_money.toString(),
                                       style: const TextStyle(fontSize: 35),
                                       textAlign: TextAlign.right,
                                       keyboardType: TextInputType.number,

@@ -82,34 +82,52 @@ class _DeferredPaymentDetailState extends State<DeferredPaymentDetail> {
                 Row(children: [
                   const Expanded(                               // 見出しの設定
                     flex: textExpandedFlex,
-                    child: Text('日付',
+                    child: Text('支払日',
                       textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 20),
+                      style: const TextStyle(fontSize: 30),
                     ),
                   ),
                   Expanded(
                     flex: dataExpandedFlex,
                     child: Container(                           // catsテーブルのnameの表示を設定
                       padding: const EdgeInsets.all(5.0),
-                      child: Text(DateFormat("yyyy年MM月dd日").format(deferred_payments.expense_datetime),style: const TextStyle(fontSize: 20),),
+                      child: Text(DateFormat("yyyy年MM月dd日").format(deferred_payments.expense_datetime),style: const TextStyle(fontSize: 35),),
                     ),
                   ),
                 ],),
                 Row(children: [
-                  const Expanded(
-                    flex: textExpandedFlex,
-                    child: Text('支払名',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 20),
+                  const Expanded(     // 「メモ」の見出し行の設定
+                      flex: textExpandedFlex,
+                      child: Text('登録日',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 20),
+                      )
+                  ),
+                  Expanded(
+                    flex: dataExpandedFlex,
+                    child: Container(                                      // catsテーブルのmemoの表示を設定
+                      padding: const EdgeInsets.all(5.0),
+                      child: Text(DateFormat("yyyy年MM月dd日").format(deferred_payments.expense_created_at),
+                        style: const TextStyle(fontSize: 20),),
                     ),
                   ),
-                  // Expanded(
-                  //     flex: dataExpandedFlex,
-                  //     child: Container(
-                  //       padding: const EdgeInsets.all(5.0),
-                  //       // child: Text(deferred_payments.expense_name,style: const TextStyle(fontSize: 20),),
-                  //     )
-                  // ),
+                ],),
+                Row(children: [
+                  const Expanded(     // 「メモ」の見出し行の設定
+                      flex: textExpandedFlex,
+                      child: Text('支払名',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 20),
+                      )
+                  ),
+                  Expanded(
+                    flex: dataExpandedFlex,
+                    child: Container(                                      // catsテーブルのmemoの表示を設定
+                      padding: const EdgeInsets.all(5.0),
+                      child: Text(deferred_payments.expense_name.toString(),
+                        style: const TextStyle(fontSize: 20),),
+                    ),
+                  ),
                 ],),
                 Row(children: [
                   const Expanded(     // 「メモ」の見出し行の設定
