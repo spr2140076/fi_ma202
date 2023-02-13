@@ -64,7 +64,7 @@ flutter_icons:
   image_path: "lib/assets/Fi-MA.png"
 
 flutter_native_splash:
-  image: "lib/Fi-MA.png"
+  image: "lib/assets/Fi-MA1.png"
   color: "#ffdab9"
   fill: true
 

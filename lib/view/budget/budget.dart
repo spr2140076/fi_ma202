@@ -49,6 +49,8 @@ class _Budget extends State<Budget> {
   // double weekbudget = 0;
   // double daybudget = 0;
   DateTime _now = DateTime.now();
+  int get lastMonthDayNum => DateTime(_now.year, _now.month + 1, 0).day;
+  int get lastMonthNum => DateTime(_now.year, _now.month + 1, 0).month;
   bool isLoading = false;
   List<Map<String, dynamic>> totalExpense = [];
   List<Map<String, dynamic>> totalExpenseToday = [];
@@ -68,7 +70,7 @@ class _Budget extends State<Budget> {
   }
 
   double dayCalc(double week) {
-    day = (week / 30);
+    day = (week / lastMonthDayNum);
     return day;
   }
 
@@ -76,6 +78,7 @@ class _Budget extends State<Budget> {
     setState(() => isLoading = true);
     total = 0;
     _now = DateTime.now();
+    print(lastMonthNum);
     var dtFormat = DateFormat("yy-MM");
     String strDate = dtFormat.format(_now);
     final db = await ExpenseDbHelper.expenseinstance.expensedatabase;
@@ -112,6 +115,7 @@ class _Budget extends State<Budget> {
     setState(() => isLoading = true);
     totalWeek = 0;
     _now = DateTime.now();
+
     var dtFormat = DateFormat("yyyy-MM-dd");
     String strMon = dtFormat.format(mon);
     String strSun = dtFormat.format(sun);
@@ -212,15 +216,14 @@ class _Budget extends State<Budget> {
                 children: <Widget>[
                   Text('今月', style: TextStyle(fontSize: 30),),
                   SizedBox(width: 25,),
-                  Text('¥', style: TextStyle(fontSize: 30),),
-                  SizedBox(width: 10,),
-                  Text(formatter.format(total), style: TextStyle(fontSize: 30),),
+                  (total <= month) ?
+                  Text('¥' + ' ' + formatter.format(total), style: TextStyle(fontSize: 30),):
+                  Text('¥' + ' ' + formatter.format(total), style: TextStyle(fontSize: 30, color: Colors.red)),
                   SizedBox(width: 10,),
                   Text('/', style: TextStyle(fontSize: 30),),
                   SizedBox(width: 10,),
-                  Text('¥', style: TextStyle(fontSize: 30),),
+                  Text('¥' + ' ' + formatter.format(month.floor()), style: TextStyle(fontSize: 30),),
                   SizedBox(width: 10,),
-                  Text(formatter.format(month.floor()), style: TextStyle(fontSize:30),),
                 ],
               ),
             ),
@@ -240,15 +243,14 @@ class _Budget extends State<Budget> {
                 children: <Widget>[
                   Text('今週', style: TextStyle(fontSize: 30),),
                   SizedBox(width: 25,),
-                  Text('¥', style: TextStyle(fontSize: 30),),
-                  SizedBox(width: 10,),
-                  Text(formatter.format(totalWeek), style: TextStyle(fontSize: 30),),
+                  (totalWeek <= weekbudget) ?
+                  Text('¥' + ' ' + formatter.format(totalWeek), style: TextStyle(fontSize: 30),):
+                  Text('¥' + ' ' + formatter.format(totalWeek), style: TextStyle(fontSize: 30, color: Colors.red)),
                   SizedBox(width: 10,),
                   Text('/', style: TextStyle(fontSize: 30),),
                   SizedBox(width: 10,),
-                  Text('¥', style: TextStyle(fontSize: 30),),
+                  Text('¥' + ' ' + formatter.format(weekbudget.floor()), style: TextStyle(fontSize: 30),),
                   SizedBox(width: 10,),
-                  Text(formatter.format(weekbudget.floor()), style: TextStyle(fontSize:30),),
                 ],
               ),
             ),
@@ -268,15 +270,14 @@ class _Budget extends State<Budget> {
                 children: <Widget>[
                   Text('今日', style: TextStyle(fontSize: 30),),
                   SizedBox(width: 25,),
-                  Text('¥', style: TextStyle(fontSize: 30),),
-                  SizedBox(width: 10,),
-                  Text(formatter.format(totalToday), style: TextStyle(fontSize: 30),),
+                  (totalToday <= daybudget) ?
+                  Text('¥' + ' ' + formatter.format(totalToday), style: TextStyle(fontSize: 30),):
+                  Text('¥' + ' ' + formatter.format(totalToday), style: TextStyle(fontSize: 30, color: Colors.red)),
                   SizedBox(width: 10,),
                   Text('/', style: TextStyle(fontSize: 30),),
                   SizedBox(width: 10,),
-                  Text('¥', style: TextStyle(fontSize: 30),),
+                  Text('¥' + ' ' + formatter.format(daybudget.floor()), style: TextStyle(fontSize: 30),),
                   SizedBox(width: 10,),
-                  Text(formatter.format(daybudget.floor()), style: TextStyle(fontSize:30),),
                 ],
               ),
             ),

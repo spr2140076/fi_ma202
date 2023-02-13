@@ -90,6 +90,7 @@ class ExpenseDbHelper {
     String strDate = dtFormat.format(_now);
     final String sql = "SELECT * FROM Expenses WHERE expense_genre_code = '後払い' and expense_datetime >= '$strDate' ORDER BY expense_datetime ASC";
     final expensesData = await db.rawQuery(sql);         // 条件指定しないでcatsテーブルを読み込む
+    final expensesDa = await db.rawQuery('SELECT expense_datetime FROM Expenses');
 
     return expensesData.map((json) => Expenses.fromJson(json)).toList();    // 読み込んだテーブルデータをListにパースしてreturn
   }
@@ -100,7 +101,8 @@ class ExpenseDbHelper {
     var dtFormat = DateFormat("yyyy-MM");
     String strDate = dtFormat.format(_now);
     // print(strDate);
-    final String sql = "SELECT * FROM Expenses WHERE expense_datetime LIKE '$strDate%' ORDER BY expense_datetime DESC";
+
+    final String sql = "SELECT * FROM Expenses WHERE expense_datetime LIKE '$strDate%' ORDER BY expense_datetime DESC, expense_created_at DESC";
     final expensesData = await db.rawQuery(sql);         // 条件指定しないでcatsテーブルを読み込む
 
     return expensesData.map((json) => Expenses.fromJson(json)).toList();    // 読み込んだテーブルデータをListにパースしてreturn

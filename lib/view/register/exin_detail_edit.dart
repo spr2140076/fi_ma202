@@ -70,6 +70,9 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with WidgetsBindi
   dynamic dateYear;
   dynamic dateMonth;
   dynamic dateDay;
+
+  DateFormat outputFormat = DateFormat('yyyy-MM-dd');
+
 // Stateのサブクラスを作成し、initStateをオーバーライドすると、wedgit作成時に処理を動かすことができる。
 // ここでは、各項目の初期値を設定する
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -88,7 +91,7 @@ class _ExpenseDetailEditState extends State<ExpenseDetailEdit> with WidgetsBindi
     expense_total_money = widget.expenses?.expense_total_money ?? 0;
     expense_consumption_tax = widget.expenses?.expense_consumption_tax ?? 0;
     expense_amount_including_tax = widget.expenses?.expense_amount_including_tax ?? 0;
-    expense_datetime = widget.expenses?.expense_datetime ?? DateTime.now();
+    expense_datetime = widget.expenses?.expense_datetime ?? DateTime.parse(outputFormat.format(DateTime.now()));
     expense_memo = widget.expenses?.expense_memo ?? '';
     expense_created_at = widget.expenses?.expense_created_at ?? DateTime.now();
     expense_updated_at = widget.expenses?.expense_updated_at ?? DateTime.now();

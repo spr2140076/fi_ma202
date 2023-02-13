@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -58,9 +59,37 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
               icon: const Icon(Icons.edit),                 // 鉛筆マークのアイコンを表示
             ),
             IconButton(
-              onPressed: () async {                         // ゴミ箱のアイコンが押されたときの処理を設定
-                await ExpenseDbHelper.expenseinstance.expensedelete(widget.id);  // 指定されたidのデータを削除する
-                Navigator.of(context).pop();                // 削除後に前の画面に戻る
+              // onPressed: () async {                         // ゴミ箱のアイコンが押されたときの処理を設定
+              //   await ExpenseDbHelper.expenseinstance.expensedelete(widget.id);  // 指定されたidのデータを削除する
+              //   Navigator.of(context).pop();                // 削除後に前の画面に戻る
+              // },
+              onPressed: () {
+                showCupertinoDialog(
+                  context: context,
+                  builder: (context){
+                    return CupertinoAlertDialog(
+                      title: Text('削除'),
+                      content: Text('削除しますか？'),
+                      actions: [
+                        CupertinoDialogAction(
+                          child: Text('キャンセル'),
+                          onPressed: (){
+                            Navigator.pop(context);
+                          },
+                        ),
+                        CupertinoDialogAction(
+                          isDestructiveAction: true,
+                          child: Text('削除'),
+                          onPressed: () async {
+                            await ExpenseDbHelper.expenseinstance.expensedelete(widget.id);
+                            int count = 0;
+                            Navigator.popUntil(context, (_) => count++ >= 2);
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
               },
               icon: const Icon(Icons.delete),               // ゴミ箱マークのアイコンを表示
             )
@@ -88,23 +117,6 @@ class _ExpenseDetailState extends State<ExpenseDetail> {
                     child: Container(                           // catsテーブルのnameの表示を設定
                       padding: const EdgeInsets.all(5.0),
                       child: Text(DateFormat("yyyy年MM月dd日").format(expenses.expense_datetime),
-                        style: const TextStyle(fontSize: 20),),
-                    ),
-                  ),
-                ],),
-                Row(children: [
-                  const Expanded(     // 「メモ」の見出し行の設定
-                      flex: textExpandedFlex,
-                      child: Text('支払い名',
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 20),
-                      )
-                  ),
-                  Expanded(
-                    flex: dataExpandedFlex,
-                    child: Container(                                      // catsテーブルのmemoの表示を設定
-                      padding: const EdgeInsets.all(5.0),
-                      child: Text(expenses.expense_name.toString(),
                         style: const TextStyle(fontSize: 20),),
                     ),
                   ),

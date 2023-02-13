@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:fi_ma/model/register/expense_db_helper.dart';
 import 'package:fi_ma/view/budget/budget.dart';
 import 'package:fi_ma/view/register/exin_detail_edit.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
@@ -631,7 +632,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         onPressed: () async {                                       // ＋ボタンを押したときの処理を設定
           await Navigator.of(context).push(                         // ページ遷移をNavigatorで設定
             MaterialPageRoute(
-                builder: (context) => const ExpenseDetailEdit()           // 詳細更新画面（元ネタがないから新規登録）を表示するcat_detail_edit.dartへ遷移
+                builder: (context) => const ExpenseDetailEdit(), // 詳細更新画面（元ネタがないから新規登録）を表示するcat_detail_edit.dartへ遷移
+
             ),
           );
         },

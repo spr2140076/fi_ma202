@@ -58,9 +58,33 @@ class _IncomeDetailState extends State<IncomeDetail> {
               icon: const Icon(Icons.edit),                 // 鉛筆マークのアイコンを表示
             ),
             IconButton(
-              onPressed: () async {                         // ゴミ箱のアイコンが押されたときの処理を設定
-                await IncomeDbHelper.incomeinstance.incomedelete(widget.id);  // 指定されたidのデータを削除する
-                Navigator.of(context).pop();                // 削除後に前の画面に戻る
+              onPressed: () {
+                showCupertinoDialog(
+                  context: context,
+                  builder: (context){
+                    return CupertinoAlertDialog(
+                      title: Text('削除'),
+                      content: Text('削除しますか？'),
+                      actions: [
+                        CupertinoDialogAction(
+                          child: Text('キャンセル'),
+                          onPressed: (){
+                            Navigator.pop(context);
+                          },
+                        ),
+                        CupertinoDialogAction(
+                          isDestructiveAction: true,
+                          child: Text('削除'),
+                          onPressed: () async {
+                            await IncomeDbHelper.incomeinstance.incomedelete(widget.id);
+                            int count = 0;
+                            Navigator.popUntil(context, (_) => count++ >= 2);
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
               },
               icon: const Icon(Icons.delete),               // ゴミ箱マークのアイコンを表示
             )
